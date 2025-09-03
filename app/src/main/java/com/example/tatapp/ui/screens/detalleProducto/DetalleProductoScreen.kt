@@ -17,21 +17,23 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.tatapp.modelo.entity.CarritoEntity
+import com.example.tatapp.ui.components.drawableMap
 import com.example.tatapp.ui.screens.carrito.CarritoViewModel
-import com.example.tatapp.ui.screens.productos.productosBase
+import com.example.tatapp.ui.screens.productos.ClaseProductos
 import kotlinx.coroutines.launch
+import com.example.tatapp.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetalleProductoScreen(
     navController: NavHostController,
     carritoViewModel: CarritoViewModel,
-    productoId: String
+    producto: ClaseProductos
 ) {
+
     val carrito by carritoViewModel.carrito.collectAsState()
     val totalEnCarrito by remember(carrito) { derivedStateOf { carrito.sumOf { it.cantidad } } }
 
-    val producto = productosBase.find { it.id == productoId } ?: return
     var cantidad by remember { mutableStateOf(1) }
     val scope = rememberCoroutineScope()
 
@@ -48,7 +50,7 @@ fun DetalleProductoScreen(
                     IconButton(onClick = { navController.navigate("carrito") }) {
                         BadgedBox(
                             badge = {
-                                if (totalEnCarrito > 0) {
+                                if (carritoViewModel.totalEnCarrito > 0) {
                                     Badge { Text(totalEnCarrito.toString()) }
                                 }
                             }
@@ -68,8 +70,9 @@ fun DetalleProductoScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+            val drawableId = drawableMap[producto.imagenRes] ?: com.example.tatapp.R.drawable.ej_alim
             Image(
-                painter = painterResource(producto.imagenRes),
+                painter = painterResource(id = drawableId),
                 contentDescription = producto.nombre,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -97,12 +100,13 @@ fun DetalleProductoScreen(
             Button(
                 onClick = {
                     scope.launch {
+                        val drawableId = drawableMap[producto.imagenRes] ?: R.drawable.ej_alim
                         val nuevoProducto = CarritoEntity(
                             id = producto.id,
                             nombre = producto.nombre,
                             precio = producto.precio,
                             cantidad = cantidad,
-                            imagenRes = producto.imagenRes
+                            imagenRes = drawableId
                         )
                         carritoViewModel.agregarAlCarrito(nuevoProducto)
                     }
