@@ -1,30 +1,13 @@
 package com.example.tatapp.ui.screens.detalleProducto
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
-import androidx.compose.material3.Button
-import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
+import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -33,8 +16,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.tatapp.modelo.dao.CarritoDao
-import com.example.tatapp.ui.screens.productos.ProductosViewModel
+import com.example.tatapp.modelo.entity.CarritoEntity
+import com.example.tatapp.ui.screens.carrito.CarritoViewModel
 import com.example.tatapp.ui.screens.productos.productosBase
 import kotlinx.coroutines.launch
 
@@ -42,12 +25,13 @@ import kotlinx.coroutines.launch
 @Composable
 fun DetalleProductoScreen(
     navController: NavHostController,
-    carritoDao: CarritoDao,
+    carritoViewModel: CarritoViewModel,
     productoId: String
 ) {
-    val productosViewModel = remember { ProductosViewModel(carritoDao, null, "") }
-    val producto = productosBase.find { it.id == productoId } ?: return
+    val carrito by carritoViewModel.carrito.collectAsState()
+    val totalEnCarrito by remember(carrito) { derivedStateOf { carrito.sumOf { it.cantidad } } }
 
+    val producto = productosBase.find { it.id == productoId } ?: return
     var cantidad by remember { mutableStateOf(1) }
     val scope = rememberCoroutineScope()
 
@@ -59,7 +43,21 @@ fun DetalleProductoScreen(
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.AutoMirrored.Rounded.ArrowBack, "Volver")
                     }
-                }
+                },
+                actions = {
+                    IconButton(onClick = { navController.navigate("carrito") }) {
+                        BadgedBox(
+                            badge = {
+                                if (totalEnCarrito > 0) {
+                                    Badge { Text(totalEnCarrito.toString()) }
+                                }
+                            }
+                        ) {
+                            Icon(Icons.Default.ShoppingCart, contentDescription = "Carrito")
+                        }
+                    }
+                },
+                modifier = Modifier.statusBarsPadding()
             )
         }
     ) { innerPadding ->
@@ -87,19 +85,28 @@ fun DetalleProductoScreen(
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Button(
-                    onClick = { if (cantidad > 1) cantidad-- },
-                    modifier = Modifier.size(50.dp)
-                ) { Text("-", fontSize = 20.sp) }
+                Button(onClick = { if (cantidad > 1) cantidad-- }, modifier = Modifier.size(50.dp)) {
+                    Text("-", fontSize = 20.sp)
+                }
                 Text("$cantidad", fontSize = 30.sp)
-                Button(
-                    onClick = { cantidad++ },
-                    modifier = Modifier.size(50.dp)
-                ) { Text("+", fontSize = 20.sp) }
+                Button(onClick = { cantidad++ }, modifier = Modifier.size(50.dp)) {
+                    Text("+", fontSize = 20.sp)
+                }
             }
 
             Button(
-                onClick = { scope.launch { productosViewModel.agregarAlCarrito(producto, cantidad) } },
+                onClick = {
+                    scope.launch {
+                        val nuevoProducto = CarritoEntity(
+                            id = producto.id,
+                            nombre = producto.nombre,
+                            precio = producto.precio,
+                            cantidad = cantidad,
+                            imagenRes = producto.imagenRes
+                        )
+                        carritoViewModel.agregarAlCarrito(nuevoProducto)
+                    }
+                },
                 modifier = Modifier.fillMaxWidth().height(60.dp),
                 shape = RoundedCornerShape(12.dp)
             ) {

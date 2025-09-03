@@ -46,7 +46,10 @@ class MainActivity : ComponentActivity() {
                 NavHost(navController = navController, startDestination = "homeProductosScreen") {
 
                     composable("homeProductosScreen") {
-                        HomeProductosScreen(navController = navController)
+                        HomeProductosScreen(
+                            navController = navController,
+                            carritoViewModel = carritoViewModel
+                        )
                     }
 
                     composable(
@@ -86,7 +89,7 @@ class MainActivity : ComponentActivity() {
                         val productoId = backStackEntry.arguments?.getString("productoId") ?: ""
                         DetalleProductoScreen(
                             navController = navController,
-                            carritoDao = db.carritoDao(),
+                            carritoViewModel = carritoViewModel,
                             productoId = productoId
                         )
                     }

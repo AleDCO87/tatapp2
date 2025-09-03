@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tatapp.modelo.dao.CarritoDao
 import com.example.tatapp.modelo.entity.CarritoEntity
+import com.example.tatapp.ui.screens.productos.ClaseProductos
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -57,4 +58,16 @@ class CarritoViewModel(private val dao: CarritoDao) : ViewModel() {
             dao.vaciarCarrito()
         }
     }
+
+    fun agregarAlCarrito(producto: CarritoEntity) {
+        viewModelScope.launch {
+            val existente = dao.getById(producto.id)
+            if (existente == null) {
+                dao.insertarProducto(producto)
+            } else {
+                dao.actualizarProducto(existente.copy(cantidad = existente.cantidad + producto.cantidad))
+            }
+        }
+    }
+
 }
