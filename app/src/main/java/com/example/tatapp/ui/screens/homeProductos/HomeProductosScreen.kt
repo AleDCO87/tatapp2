@@ -23,14 +23,22 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.tatapp.R
+import com.example.tatapp.modelo.entity.CarritoEntity
+import com.example.tatapp.ui.screens.carrito.CarritoViewModel
 import com.example.tatapp.ui.screens.productos.ClaseProductos
 import com.example.tatapp.ui.screens.productos.productosBase
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeProductosScreen(navController: NavHostController) {
+fun HomeProductosScreen(
+    navController: NavHostController,
+    carritoViewModel: CarritoViewModel
+) {
+    val carrito by carritoViewModel.carrito.collectAsState()
+    val totalEnCarrito by remember(carrito) { derivedStateOf { carrito.sumOf { it.cantidad } } }
 
     var selectedItem by remember { mutableStateOf(0) }
     val todasCategorias = categoriasProductos + categoriasServicios
@@ -45,9 +53,16 @@ fun HomeProductosScreen(navController: NavHostController) {
                     }
                 },
                 actions = {
-                    IconButton(onClick = {
-                        navController.navigate("carrito")  }) {
-                        Icon(Icons.Default.ShoppingCart, contentDescription = "Carrito")
+                    IconButton(onClick = { navController.navigate("carrito") }) {
+                        BadgedBox(
+                            badge = {
+                                if (totalEnCarrito > 0) {
+                                    Badge { Text(totalEnCarrito.toString()) }
+                                }
+                            }
+                        ) {
+                            Icon(Icons.Default.ShoppingCart, contentDescription = "Carrito")
+                        }
                     }
                 },
                 modifier = Modifier.statusBarsPadding()
@@ -113,12 +128,14 @@ fun HomeProductosScreen(navController: NavHostController) {
                 )
             }
 
-            // Mostrar secciones para cada categoría
             todasCategorias.forEach { categoria ->
                 item {
                     CategoriaSection(
                         nombreCategoria = categoria.nombreCat,
-                        productos = productosBase.filter { it.categoria.name == categoria.nombreCat || it.categoria.displayName == categoria.nombreCat },
+                        productos = productosBase
+                            .filter { it.categoria.name == categoria.nombreCat || it.categoria.displayName == categoria.nombreCat }
+                            .sortedByDescending { it.evaluacion }
+                            .take(5),
                         onVerTodoClick = { navController.navigate("subcategorias/${categoria.nombreCat}") },
                         navController = navController
                     )
@@ -163,9 +180,13 @@ fun CategoriaSection(
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             items(productos) { producto ->
-                ProductoCard(nombre = producto.nombre) {
-                    navController.navigate("productos") // Puedes agregar categoría/subcategoría si deseas
-                }
+                ProductoCard(
+                    nombre = producto.nombre,
+                    onClick = {
+                        navController.navigate("detalle/${producto.id}")
+
+                    }
+                )
             }
         }
     }
@@ -177,7 +198,7 @@ fun ProductoCard(nombre: String, onClick: () -> Unit) {
         shape = RoundedCornerShape(20.dp),
         modifier = Modifier
             .size(width = 160.dp, height = 200.dp)
-            .clickable {  },
+            .clickable { onClick() },
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
     ) {
         Column(
