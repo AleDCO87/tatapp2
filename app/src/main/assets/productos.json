@@ -1,0 +1,788 @@
+[
+  {
+    "id": "e7b1a2c3-4d5f-6a7b-8c9d-0e1f2a3b4c5d",
+    "nombre": "Manzanas",
+    "precio": 2000,
+    "imagenRes": "ej_alim",
+    "descripcion": "Manzanas frescas de temporada",
+    "categoria": "ALIMENTOS",
+    "subcategoria": "Frutas y Verduras",
+    "evaluacion": 4.5
+  },
+  {
+    "id": "a2c3d4e5-6f7a-8b9c-0d1e-2f3a4b5c6d7e",
+    "nombre": "Palta",
+    "precio": 1500,
+    "imagenRes": "ej_alim",
+    "descripcion": "Paltas maduras y cremosas",
+    "categoria": "ALIMENTOS",
+    "subcategoria": "Frutas y Verduras",
+    "evaluacion": 4.2
+  },
+  {
+    "id": "b3d4e5f6-7a8b-9c0d-1e2f-3a4b5c6d7e8f",
+    "nombre": "Nueces",
+    "precio": 2000,
+    "imagenRes": "ej_alim",
+    "descripcion": "Nueces frescas y saludables",
+    "categoria": "ALIMENTOS",
+    "subcategoria": "Frutas y Verduras",
+    "evaluacion": 4.7
+  },
+  {
+    "id": "c4e5f6a7-8b9c-0d1e-2f3a-4b5c6d7e8f9a",
+    "nombre": "Garbanzos",
+    "precio": 1800,
+    "imagenRes": "ej_alim",
+    "descripcion": "Garbanzos secos para cocinar",
+    "categoria": "ALIMENTOS",
+    "subcategoria": "Cereales",
+    "evaluacion": 4.1
+  },
+  {
+    "id": "d5f6a7b8-9c0d-1e2f-3a4b-5c6d7e8f9a0b",
+    "nombre": "Avena",
+    "precio": 2500,
+    "imagenRes": "ej_alim",
+    "descripcion": "Avena integral para desayunos",
+    "categoria": "ALIMENTOS",
+    "subcategoria": "Cereales",
+    "evaluacion": 4.3
+  },
+  {
+    "id": "e6a7b8c9-0d1e-2f3a-4b5c-6d7e8f9a0b1c",
+    "nombre": "Lentejas",
+    "precio": 2000,
+    "imagenRes": "ej_alim",
+    "descripcion": "Lentejas nutritivas y versátiles",
+    "categoria": "ALIMENTOS",
+    "subcategoria": "Cereales",
+    "evaluacion": 4.0
+  },
+  {
+    "id": "f7b8c9d0-1e2f-3a4b-5c6d-7e8f9a0b1c2d",
+    "nombre": "Huevos",
+    "precio": 2500,
+    "imagenRes": "ej_alim",
+    "descripcion": "Huevos frescos de granja",
+    "categoria": "ALIMENTOS",
+    "subcategoria": "Lácteos",
+    "evaluacion": 4.6
+  },
+  {
+    "id": "a8c9d0e1-2f3a-4b5c-6d7e-8f9a0b1c2d3e",
+    "nombre": "Leche",
+    "precio": 1800,
+    "imagenRes": "ej_alim",
+    "descripcion": "Leche fresca pasteurizada",
+    "categoria": "ALIMENTOS",
+    "subcategoria": "Lácteos",
+    "evaluacion": 4.4
+  },
+  {
+    "id": "b9d0e1f2-3a4b-5c6d-7e8f-9a0b1c2d3e4f",
+    "nombre": "Yogur griego",
+    "precio": 2000,
+    "imagenRes": "ej_alim",
+    "descripcion": "Yogur griego natural",
+    "categoria": "ALIMENTOS",
+    "subcategoria": "Lácteos",
+    "evaluacion": 4.8
+  },
+  {
+    "id": "c0e1f2a3-4b5c-6d7e-8f9a-0b1c2d3e4f5a",
+    "nombre": "Pescado graso",
+    "precio": 3200,
+    "imagenRes": "ej_alim",
+    "descripcion": "Pescado rico en Omega 3",
+    "categoria": "ALIMENTOS",
+    "subcategoria": "Carnes",
+    "evaluacion": 4.9
+  },
+  {
+    "id": "d1f2a3b4-5c6d-7e8f-9a0b-1c2d3e4f5a6b",
+    "nombre": "Pollo",
+    "precio": 2800,
+    "imagenRes": "ej_alim",
+    "descripcion": "Pollo fresco de corral",
+    "categoria": "ALIMENTOS",
+    "subcategoria": "Carnes",
+    "evaluacion": 4.6
+  },
+  {
+    "id": "e2a3b4c5-6d7e-8f9a-0b1c-2d3e4f5a6b7c",
+    "nombre": "Carne de vacuno",
+    "precio": 3500,
+    "imagenRes": "ej_alim",
+    "descripcion": "Carne de vacuno premium",
+    "categoria": "ALIMENTOS",
+    "subcategoria": "Carnes",
+    "evaluacion": 4.7
+  },
+  {
+    "id": "f3b4c5d6-7e8f-9a0b-1c2d-3e4f5a6b7c8d",
+    "nombre": "Jabón",
+    "precio": 1200,
+    "imagenRes": "ej_alim",
+    "descripcion": "Jabón líquido para higiene diaria",
+    "categoria": "SALUD",
+    "subcategoria": "Higiene",
+    "evaluacion": 4.3
+  },
+  {
+    "id": "a4c5d6e7-8f9a-0b1c-2d3e-4f5a6b7c8d9e",
+    "nombre": "Cepillo dental",
+    "precio": 800,
+    "imagenRes": "ej_alim",
+    "descripcion": "Cepillo dental suave",
+    "categoria": "SALUD",
+    "subcategoria": "Higiene",
+    "evaluacion": 4.5
+  },
+  {
+    "id": "b5d6e7f8-9a0b-1c2d-3e4f-5a6b7c8d9e0f",
+    "nombre": "Shampoo",
+    "precio": 1500,
+    "imagenRes": "ej_alim",
+    "descripcion": "Shampoo nutritivo para cabello",
+    "categoria": "SALUD",
+    "subcategoria": "Higiene",
+    "evaluacion": 4.2
+  },
+  {
+    "id": "c6e7f8a9-0b1c-2d3e-4f5a-6b7c8d9e0f1a",
+    "nombre": "Vitamina C",
+    "precio": 2500,
+    "imagenRes": "ej_alim",
+    "descripcion": "Suplemento de vitamina C",
+    "categoria": "SALUD",
+    "subcategoria": "Suplementos",
+    "evaluacion": 4.6
+  },
+  {
+    "id": "d7f8a9b0-1c2d-3e4f-5a6b-7c8d9e0f1a2b",
+    "nombre": "Omega 3",
+    "precio": 3000,
+    "imagenRes": "ej_alim",
+    "descripcion": "Suplemento de Omega 3",
+    "categoria": "SALUD",
+    "subcategoria": "Suplementos",
+    "evaluacion": 4.8
+  },
+  {
+    "id": "e8a9b0c1-2d3e-4f5a-6b7c-8d9e0f1a2b3c",
+    "nombre": "Magnesio",
+    "precio": 2200,
+    "imagenRes": "ej_alim",
+    "descripcion": "Suplemento de magnesio",
+    "categoria": "SALUD",
+    "subcategoria": "Suplementos",
+    "evaluacion": 4.4
+  },
+  {
+    "id": "f9b0c1d2-3e4f-5a6b-7c8d-9e0f1a2b3c4d",
+    "nombre": "Paracetamol",
+    "precio": 1800,
+    "imagenRes": "ej_alim",
+    "descripcion": "Analgésico y antipirético",
+    "categoria": "SALUD",
+    "subcategoria": "Medicamentos",
+    "evaluacion": 4.5
+  },
+  {
+    "id": "a0c1d2e3-4f5a-6b7c-8d9e-0f1a2b3c4d5e",
+    "nombre": "Ibuprofeno",
+    "precio": 2000,
+    "imagenRes": "ej_alim",
+    "descripcion": "Antiinflamatorio y analgésico",
+    "categoria": "SALUD",
+    "subcategoria": "Medicamentos",
+    "evaluacion": 4.3
+  },
+  {
+    "id": "b1d2e3f4-5a6b-7c8d-9e0f-1a2b3c4d5e6f",
+    "nombre": "Amoxicilina",
+    "precio": 2500,
+    "imagenRes": "ej_alim",
+    "descripcion": "Antibiótico recetado",
+    "categoria": "SALUD",
+    "subcategoria": "Medicamentos",
+    "evaluacion": 4.7
+  },
+
+  {
+    "id": "c2e3f4a5-6b7c-8d9e-0f1a-2b3c4d5e6f7a",
+    "nombre": "Comida Gato",
+    "precio": 3000,
+    "imagenRes": "ej_alim",
+    "descripcion": "Alimento balanceado para gatos",
+    "categoria": "MASCOTAS",
+    "subcategoria": "Gato",
+    "evaluacion": 4.6
+  },
+  {
+    "id": "d3f4a5b6-7c8d-9e0f-1a2b-3c4d5e6f7a8b",
+    "nombre": "Juguete Gato",
+    "precio": 1200,
+    "imagenRes": "ej_alim",
+    "descripcion": "Juguete interactivo para gatos",
+    "categoria": "MASCOTAS",
+    "subcategoria": "Gato",
+    "evaluacion": 4.4
+  },
+  {
+    "id": "e4a5b6c7-8d9e-0f1a-2b3c-4d5e6f7a8b9c",
+    "nombre": "Arena Gato",
+    "precio": 2000,
+    "imagenRes": "ej_alim",
+    "descripcion": "Arena higiénica para gatos",
+    "categoria": "MASCOTAS",
+    "subcategoria": "Gato",
+    "evaluacion": 4.5
+  },
+  {
+    "id": "f5b6c7d8-9e0f-1a2b-3c4d-5e6f7a8b9c0d",
+    "nombre": "Comida Perro",
+    "precio": 3500,
+    "imagenRes": "ej_alim",
+    "descripcion": "Alimento balanceado para perros",
+    "categoria": "MASCOTAS",
+    "subcategoria": "Perro",
+    "evaluacion": 4.7
+  },
+  {
+    "id": "a6c7d8e9-0f1a-2b3c-4d5e-6f7a8b9c0d1e",
+    "nombre": "Collar Perro",
+    "precio": 1500,
+    "imagenRes": "ej_alim",
+    "descripcion": "Collar ajustable para perros",
+    "categoria": "MASCOTAS",
+    "subcategoria": "Perro",
+    "evaluacion": 4.6
+  },
+  {
+    "id": "b7d8e9f0-1a2b-3c4d-5e6f-7a8b9c0d1e2f",
+    "nombre": "Juguete Perro",
+    "precio": 1800,
+    "imagenRes": "ej_alim",
+    "descripcion": "Juguete para morder",
+    "categoria": "MASCOTAS",
+    "subcategoria": "Perro",
+    "evaluacion": 4.5
+  },
+  {
+    "id": "c8e9f0a1-2b3c-4d5e-6f7a-8b9c0d1e2f3a",
+    "nombre": "Silla de comedor",
+    "precio": 45000,
+    "imagenRes": "ej_alim",
+    "descripcion": "Silla cómoda para comedor",
+    "categoria": "HOGAR",
+    "subcategoria": "Muebles",
+    "evaluacion": 4.6
+  },
+  {
+    "id": "d9f0a1b2-3c4d-5e6f-7a8b-9c0d1e2f3a4b",
+    "nombre": "Mesa de centro",
+    "precio": 55000,
+    "imagenRes": "ej_alim",
+    "descripcion": "Mesa de centro elegante",
+    "categoria": "HOGAR",
+    "subcategoria": "Muebles",
+    "evaluacion": 4.7
+  },
+  {
+    "id": "e0a1b2c3-4d5e-6f7a-8b9c-0d1e2f3a4b5c",
+    "nombre": "Estantería",
+    "precio": 60000,
+    "imagenRes": "ej_alim",
+    "descripcion": "Estantería de madera",
+    "categoria": "HOGAR",
+    "subcategoria": "Muebles",
+    "evaluacion": 4.5
+  },
+  {
+    "id": "f1b2c3d4-5e6f-7a8b-9c0d-1e2f3a4b5c6d",
+    "nombre": "Taladro",
+    "precio": 25000,
+    "imagenRes": "ej_alim",
+    "descripcion": "Taladro eléctrico",
+    "categoria": "HOGAR",
+    "subcategoria": "Herramientas",
+    "evaluacion": 4.8
+  },
+  {
+    "id": "a2c3d4e5-6f7a-8b9c-0d1e-2f3a4b5c6d7e",
+    "nombre": "Destornillador set",
+    "precio": 12000,
+    "imagenRes": "ej_alim",
+    "descripcion": "Juego de destornilladores",
+    "categoria": "HOGAR",
+    "subcategoria": "Herramientas",
+    "evaluacion": 4.6
+  },
+  {
+    "id": "b3d4e5f6-7a8b-9c0d-1e2f-3a4b5c6d7e8f",
+    "nombre": "Sierra manual",
+    "precio": 15000,
+    "imagenRes": "ej_alim",
+    "descripcion": "Sierra manual de carpintería",
+    "categoria": "HOGAR",
+    "subcategoria": "Herramientas",
+    "evaluacion": 4.4
+  },
+  {
+    "id": "c4e5f6a7-8b9c-0d1e-2f3a-4b5c6d7e8f9a",
+    "nombre": "Planta interior",
+    "precio": 8000,
+    "imagenRes": "ej_alim",
+    "descripcion": "Planta para interiores",
+    "categoria": "JARDIN",
+    "subcategoria": "Plantas",
+    "evaluacion": 4.7
+  },
+  {
+    "id": "d5f6a7b8-9c0d-1e2f-3a4b-5c6d7e8f9a0b",
+    "nombre": "Planta exterior",
+    "precio": 10000,
+    "imagenRes": "ej_alim",
+    "descripcion": "Planta para exteriores",
+    "categoria": "JARDIN",
+    "subcategoria": "Plantas",
+    "evaluacion": 4.6
+  },
+  {
+    "id": "e6a7b8c9-0d1e-2f3a-4b5c-6d7e8f9a0b1c",
+    "nombre": "Suculenta",
+    "precio": 5000,
+    "imagenRes": "ej_alim",
+    "descripcion": "Planta suculenta resistente",
+    "categoria": "JARDIN",
+    "subcategoria": "Plantas",
+    "evaluacion": 4.5
+  },
+  {
+    "id": "f7b8c9d0-1e2f-3a4b-5c6d-7e8f9a0b1c2d",
+    "nombre": "Guantes de jardinería",
+    "precio": 3000,
+    "imagenRes": "ej_alim",
+    "descripcion": "Guantes resistentes para jardinería",
+    "categoria": "JARDIN",
+    "subcategoria": "Accesorios",
+    "evaluacion": 4.6
+  },
+  {
+    "id": "a8c9d0e1-2f3a-4b5c-6d7e-8f9a0b1c2d3e",
+    "nombre": "Manguera",
+    "precio": 7000,
+    "imagenRes": "ej_alim",
+    "descripcion": "Manguera flexible para riego",
+    "categoria": "JARDIN",
+    "subcategoria": "Accesorios",
+    "evaluacion": 4.5
+  },
+  {
+    "id": "b9d0e1f2-3a4b-5c6d-7e8f-9a0b1c2d3e4f",
+    "nombre": "Regadera",
+    "precio": 4500,
+    "imagenRes": "ej_alim",
+    "descripcion": "Regadera plástica de 2L",
+    "categoria": "JARDIN",
+    "subcategoria": "Accesorios",
+    "evaluacion": 4.4
+  },
+  {
+    "id": "c0e1f2a3-4b5c-6d7e-8f9a-0b1c2d3e4f5a",
+    "nombre": "Fertilizante orgánico",
+    "precio": 12000,
+    "imagenRes": "ej_alim",
+    "descripcion": "Fertilizante natural",
+    "categoria": "JARDIN",
+    "subcategoria": "Fertilizantes",
+    "evaluacion": 4.7
+  },
+  {
+    "id": "d1f2a3b4-5c6d-7e8f-9a0b-1c2d3e4f5a6b",
+    "nombre": "Fertilizante líquido",
+    "precio": 10000,
+    "imagenRes": "ej_alim",
+    "descripcion": "Fertilizante líquido concentrado",
+    "categoria": "JARDIN",
+    "subcategoria": "Fertilizantes",
+    "evaluacion": 4.6
+  },
+  {
+    "id": "e2a3b4c5-6d7e-8f9a-0b1c-2d3e4f5a6b7c",
+    "nombre": "Abono granular",
+    "precio": 8000,
+    "imagenRes": "ej_alim",
+    "descripcion": "Abono en gránulos",
+    "categoria": "JARDIN",
+    "subcategoria": "Fertilizantes",
+    "evaluacion": 4.5
+  },
+
+  {
+    "id": "f3c4d5e6-7a8b-9c0d-1e2f-3a4b5c6d7e8f",
+    "nombre": "Labial",
+    "precio": 7000,
+    "imagenRes": "ej_alim",
+    "descripcion": "Labial de larga duración",
+    "categoria": "BELLEZA",
+    "subcategoria": "Maquillaje",
+    "evaluacion": 4.8
+  },
+  {
+    "id": "a4d5e6f7-8a9b-0c1d-2e3f-4a5b6c7d8e9f",
+    "nombre": "Base de maquillaje",
+    "precio": 12000,
+    "imagenRes": "ej_alim",
+    "descripcion": "Base líquida de alta cobertura",
+    "categoria": "BELLEZA",
+    "subcategoria": "Maquillaje",
+    "evaluacion": 4.7
+  },
+  {
+    "id": "b5e6f7a8-9b0c-1d2e-3f4a-5b6c7d8e9f0a",
+    "nombre": "Rubor",
+    "precio": 9000,
+    "imagenRes": "ej_alim",
+    "descripcion": "Rubor en polvo",
+    "categoria": "BELLEZA",
+    "subcategoria": "Maquillaje",
+    "evaluacion": 4.5
+  },
+  {
+    "id": "c6f7a8b9-0c1d-2e3f-4a5b-6c7d8e9f0a1b",
+    "nombre": "Perfume femenino",
+    "precio": 35000,
+    "imagenRes": "ej_alim",
+    "descripcion": "Perfume para mujer",
+    "categoria": "BELLEZA",
+    "subcategoria": "Perfumería",
+    "evaluacion": 4.8
+  },
+  {
+    "id": "d7a8b9c0-1d2e-3f4a-5b6c-7d8e9f0a1b2c",
+    "nombre": "Perfume masculino",
+    "precio": 37000,
+    "imagenRes": "ej_alim",
+    "descripcion": "Perfume para hombre",
+    "categoria": "BELLEZA",
+    "subcategoria": "Perfumería",
+    "evaluacion": 4.7
+  },
+  {
+    "id": "e8b9c0d1-2e3f-4a5b-6c7d-8e9f0a1b2c3d",
+    "nombre": "Crema corporal",
+    "precio": 15000,
+    "imagenRes": "ej_alim",
+    "descripcion": "Crema hidratante corporal",
+    "categoria": "BELLEZA",
+    "subcategoria": "Perfumería",
+    "evaluacion": 4.6
+  },
+  {
+    "id": "f9c0d1e2-3f4a-5b6c-7d8e-9f0a1b2c3d4e",
+    "nombre": "Cartera mujer",
+    "precio": 25000,
+    "imagenRes": "ej_alim",
+    "descripcion": "Cartera elegante para mujer",
+    "categoria": "REGALOS",
+    "subcategoria": "Ella",
+    "evaluacion": 4.7
+  },
+  {
+    "id": "a0d1e2f3-4a5b-6c7d-8e9f-0a1b2c3d4e5f",
+    "nombre": "Collar mujer",
+    "precio": 18000,
+    "imagenRes": "ej_alim",
+    "descripcion": "Collar de moda",
+    "categoria": "REGALOS",
+    "subcategoria": "Ella",
+    "evaluacion": 4.6
+  },
+  {
+    "id": "b1e2f3a4-5b6c-7d8e-9f0a-1b2c3d4e5f6a",
+    "nombre": "Set maquillaje",
+    "precio": 30000,
+    "imagenRes": "ej_alim",
+    "descripcion": "Set completo de maquillaje",
+    "categoria": "REGALOS",
+    "subcategoria": "Ella",
+    "evaluacion": 4.8
+  },
+  {
+    "id": "c2f3a4b5-6c7d-8e9f-0a1b-2c3d4e5f6a7b",
+    "nombre": "Reloj hombre",
+    "precio": 40000,
+    "imagenRes": "ej_alim",
+    "descripcion": "Reloj clásico para hombre",
+    "categoria": "REGALOS",
+    "subcategoria": "Él",
+    "evaluacion": 4.7
+  },
+  {
+    "id": "d3a4b5c6-7d8e-9f0a-1b2c-3d4e5f6a7b8c",
+    "nombre": "Cinturón hombre",
+    "precio": 15000,
+    "imagenRes": "ej_alim",
+    "descripcion": "Cinturón de cuero",
+    "categoria": "REGALOS",
+    "subcategoria": "Él",
+    "evaluacion": 4.5
+  },
+  {
+    "id": "e4b5c6d7-8e9f-0a1b-2c3d-4e5f6a7b8c9d",
+    "nombre": "Set afeitado",
+    "precio": 22000,
+    "imagenRes": "ej_alim",
+    "descripcion": "Set de afeitado completo",
+    "categoria": "REGALOS",
+    "subcategoria": "Él",
+    "evaluacion": 4.6
+  },
+  {
+    "id": "f5c6d7e8-9f0a-1b2c-3d4e-5f6a7b8c9d0e",
+    "nombre": "Muñeco niño",
+    "precio": 12000,
+    "imagenRes": "ej_alim",
+    "descripcion": "Muñeco de juguete para niños",
+    "categoria": "REGALOS",
+    "subcategoria": "Niño",
+    "evaluacion": 4.6
+  },
+  {
+    "id": "a6d7e8f9-0a1b-2c3d-4e5f-6a7b8c9d0e1f",
+    "nombre": "Libro infantil",
+    "precio": 8000,
+    "imagenRes": "ej_alim",
+    "descripcion": "Libro educativo para niños",
+    "categoria": "REGALOS",
+    "subcategoria": "Niño",
+    "evaluacion": 4.5
+  },
+  {
+    "id": "b7e8f9a0-1b2c-3d4e-5f6a-7b8c9d0e1f2a",
+    "nombre": "Set de construcción",
+    "precio": 15000,
+    "imagenRes": "ej_alim",
+    "descripcion": "Set para construir juguetes",
+    "categoria": "REGALOS",
+    "subcategoria": "Niño",
+    "evaluacion": 4.7
+  },
+  {
+    "id": "c8f9a0b1-2c3d-4e5f-6a7b-8c9d0e1f2a3b",
+    "nombre": "Muñeca niña",
+    "precio": 12000,
+    "imagenRes": "ej_alim",
+    "descripcion": "Muñeca de juguete para niñas",
+    "categoria": "REGALOS",
+    "subcategoria": "Niña",
+    "evaluacion": 4.6
+  },
+  {
+    "id": "d9a0b1c2-3d4e-5f6a-7b8c-9d0e1f2a3b4c",
+    "nombre": "Puzzle educativo",
+    "precio": 9000,
+    "imagenRes": "ej_alim",
+    "descripcion": "Puzzle educativo para niñas",
+    "categoria": "REGALOS",
+    "subcategoria": "Niña",
+    "evaluacion": 4.5
+  },
+  {
+    "id": "e0b1c2d3-4e5f-6a7b-8c9d-0e1f2a3b4c5d",
+    "nombre": "Set de arte",
+    "precio": 14000,
+    "imagenRes": "ej_alim",
+    "descripcion": "Set de arte creativo para niñas",
+    "categoria": "REGALOS",
+    "subcategoria": "Niña",
+    "evaluacion": 4.7
+  },
+  {
+    "id": "f1c2d3e4-5f6a-7b8c-9d0e-1f2a3b4c5d6e",
+    "nombre": "Masaje relajante",
+    "precio": 20000,
+    "imagenRes": "ej_alim",
+    "descripcion": "Masaje para relajación",
+    "categoria": "CUIDADOS",
+    "subcategoria": "Terapias",
+    "evaluacion": 4.8
+  },
+  {
+    "id": "a2d3e4f5-6f7a-8b9c-0d1e-2f3a4b5c6d7f",
+    "nombre": "Acupuntura",
+    "precio": 25000,
+    "imagenRes": "ej_alim",
+    "descripcion": "Sesión de acupuntura",
+    "categoria": "CUIDADOS",
+    "subcategoria": "Terapias",
+    "evaluacion": 4.7
+  },
+  {
+    "id": "b3e4f5a6-7b8c-9d0e-1f2a-3b4c5d6e7f8a",
+    "nombre": "Reflexología",
+    "precio": 18000,
+    "imagenRes": "ej_alim",
+    "descripcion": "Terapia de reflexología",
+    "categoria": "CUIDADOS",
+    "subcategoria": "Terapias",
+    "evaluacion": 4.6
+  },
+  {
+    "id": "c4f5a6b7-8c9d-0e1f-2a3b-4c5d6e7f8a9b",
+    "nombre": "Limpieza facial",
+    "precio": 12000,
+    "imagenRes": "ej_alim",
+    "descripcion": "Limpieza facial profesional",
+    "categoria": "CUIDADOS",
+    "subcategoria": "Servicios",
+    "evaluacion": 4.7
+  },
+  {
+    "id": "d5a6b7c8-9d0e-1f2a-3b4c-5d6e7f8a9b0c",
+    "nombre": "Depilación",
+    "precio": 15000,
+    "imagenRes": "ej_alim",
+    "descripcion": "Servicio de depilación",
+    "categoria": "CUIDADOS",
+    "subcategoria": "Servicios",
+    "evaluacion": 4.6
+  },
+  {
+    "id": "e6b7c8d9-0e1f-2a3b-4c5d-6e7f8a9b0c1d",
+    "nombre": "Manicure",
+    "precio": 10000,
+    "imagenRes": "ej_alim",
+    "descripcion": "Servicio de manicure",
+    "categoria": "CUIDADOS",
+    "subcategoria": "Servicios",
+    "evaluacion": 4.5
+  },
+
+  {
+    "id": "f6c7d8e9-0a1b-2c3d-4e5f-6a7b8c9d0e1f",
+    "nombre": "Tour Santiago",
+    "precio": 50000,
+    "imagenRes": "ej_alim",
+    "descripcion": "Tour por Santiago",
+    "categoria": "VIAJES",
+    "subcategoria": "Nacional",
+    "evaluacion": 4.8
+  },
+  {
+    "id": "a7d8e9f0-1a2b-3c4d-5e6f-7a8b9c0d1e2f",
+    "nombre": "Tour Valparaíso",
+    "precio": 45000,
+    "imagenRes": "ej_alim",
+    "descripcion": "Tour por Valparaíso",
+    "categoria": "VIAJES",
+    "subcategoria": "Nacional",
+    "evaluacion": 4.7
+  },
+  {
+    "id": "b8e9f0a1-2b3c-4d5e-6f7a-8b9c0d1e2f3a",
+    "nombre": "Excursión Patagonia",
+    "precio": 80000,
+    "imagenRes": "ej_alim",
+    "descripcion": "Excursión a la Patagonia",
+    "categoria": "VIAJES",
+    "subcategoria": "Nacional",
+    "evaluacion": 4.9
+  },
+  {
+    "id": "c9f0a1b2-3c4d-5e6f-7a8b-9c0d1e2f3a4b",
+    "nombre": "Tour París",
+    "precio": 120000,
+    "imagenRes": "ej_alim",
+    "descripcion": "Tour por París",
+    "categoria": "VIAJES",
+    "subcategoria": "Internacional",
+    "evaluacion": 4.9
+  },
+  {
+    "id": "d0a1b2c3-4d5e-6f7a-8b9c-0d1e2f3a4b5c",
+    "nombre": "Tour Roma",
+    "precio": 115000,
+    "imagenRes": "ej_alim",
+    "descripcion": "Tour por Roma",
+    "categoria": "VIAJES",
+    "subcategoria": "Internacional",
+    "evaluacion": 4.8
+  },
+  {
+    "id": "e1b2c3d4-5e6f-7a8b-9c0d-1e2f3a4b5c6d",
+    "nombre": "Tour Nueva York",
+    "precio": 130000,
+    "imagenRes": "ej_alim",
+    "descripcion": "Tour por Nueva York",
+    "categoria": "VIAJES",
+    "subcategoria": "Internacional",
+    "evaluacion": 5.0
+  },
+  {
+    "id": "f2c3d4e5-6f7a-8b9c-0d1e-2f3a4b5c6d7e",
+    "nombre": "Picnic parque",
+    "precio": 15000,
+    "imagenRes": "ej_alim",
+    "descripcion": "Picnic en el parque",
+    "categoria": "PANORAMAS",
+    "subcategoria": "Comidas",
+    "evaluacion": 4.7
+  },
+  {
+    "id": "a3d4e5f6-7a8b-9c0d-1e2f-3a4b5c6d7e8f",
+    "nombre": "Asado familiar",
+    "precio": 25000,
+    "imagenRes": "ej_alim",
+    "descripcion": "Asado para toda la familia",
+    "categoria": "PANORAMAS",
+    "subcategoria": "Comidas",
+    "evaluacion": 4.8
+  },
+  {
+    "id": "b4e5f6a7-8b9c-0d1e-2f3a-4b5c6d7e8f9a",
+    "nombre": "Brunch amigos",
+    "precio": 20000,
+    "imagenRes": "ej_alim",
+    "descripcion": "Brunch con amigos",
+    "categoria": "PANORAMAS",
+    "subcategoria": "Comidas",
+    "evaluacion": 4.6
+  },
+  {
+    "id": "c5f6a7b8-9c0d-1e2f-3a4b-5c6d7e8f9a0b",
+    "nombre": "Caminata bosque",
+    "precio": 5000,
+    "imagenRes": "ej_alim",
+    "descripcion": "Caminata por el bosque",
+    "categoria": "PANORAMAS",
+    "subcategoria": "Aire libre",
+    "evaluacion": 4.7
+  },
+  {
+    "id": "d6a7b8c9-0d1e-2f3a-4b5c-6d7e8f9a0b1c",
+    "nombre": "Tour bicicleta",
+    "precio": 7000,
+    "imagenRes": "ej_alim",
+    "descripcion": "Tour en bicicleta",
+    "categoria": "PANORAMAS",
+    "subcategoria": "Aire libre",
+    "evaluacion": 4.8
+  },
+  {
+    "id": "e7b8c9d0-1e2f-3a4b-5c6d-7e8f9a0b1c2d",
+    "nombre": "Camping",
+    "precio": 12000,
+    "imagenRes": "ej_alim",
+    "descripcion": "Camping al aire libre",
+    "categoria": "PANORAMAS",
+    "subcategoria": "Aire libre",
+    "evaluacion": 4.9
+  }
+]
+
+
+

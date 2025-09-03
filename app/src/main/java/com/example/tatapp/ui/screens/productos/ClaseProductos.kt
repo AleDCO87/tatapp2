@@ -1,8 +1,8 @@
 package com.example.tatapp.ui.screens.productos
 
-import java.util.UUID
+import kotlinx.serialization.Serializable
 
-// Enum para categorías generales
+@Serializable
 enum class CategoriaProducto(val displayName: String) {
     ALIMENTOS("Alimentos"),
     SALUD("Salud"),
@@ -16,11 +16,12 @@ enum class CategoriaProducto(val displayName: String) {
     PANORAMAS("Panoramas")
 }
 
+@Serializable
 data class ClaseProductos(
-    val id: String = UUID.randomUUID().toString(),
+    val id: String,
     val nombre: String,
     val precio: Int,
-    val imagenRes: Int,
+    val imagenRes: String, // Aquí usamos String para leer desde JSON
     val descripcion: String,
     val categoria: CategoriaProducto,
     val subcategoria: String,

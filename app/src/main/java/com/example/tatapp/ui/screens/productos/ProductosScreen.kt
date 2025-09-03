@@ -23,7 +23,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.example.tatapp.R
 import com.example.tatapp.modelo.dao.CarritoDao
+import com.example.tatapp.ui.components.drawableMap
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.text.NumberFormat
@@ -37,6 +39,9 @@ fun ProductosScreen(
     categoria: String,
     subcategoria: String
 ) {
+    val productosDataViewModel: ProductosDataViewModel = viewModel()
+    val productos by productosDataViewModel.productos.collectAsState()
+
     val productosViewModel: ProductosViewModel = viewModel(
         factory = ProductosViewModelFactory(
             carritoDao = carritoDao,
@@ -45,6 +50,8 @@ fun ProductosScreen(
             subcategoriaSeleccionada = subcategoria
         )
     )
+
+    val productosFiltrados = productosViewModel.filtrarProductos(productos)
 
     val carrito by carritoDao.obtenerCarrito().collectAsState(initial = emptyList())
     val totalEnCarrito = carrito.sumOf { it.cantidad }
@@ -93,12 +100,12 @@ fun ProductosScreen(
                 .padding(8.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            items(productosViewModel.productosFiltrados) { producto ->
+            items(productosFiltrados) { producto ->
                 ProductoItemRow(
                     producto = producto,
                     productosViewModel = productosViewModel,
                     scope = scope,
-                    navController = navController // <- PASAMOS EL NAVCONTROLLER
+                    navController = navController
                 )
             }
         }
@@ -113,6 +120,9 @@ fun ProductoItemRow(
     navController: NavHostController
 ) {
     var cantidad by remember { mutableStateOf(1) }
+
+    // 👇 Convertimos el String (ej: "ej_alim") en Int con drawableMap
+    val drawableId = drawableMap[producto.imagenRes] ?: R.drawable.ej_alim
 
     Card(
         modifier = Modifier
@@ -132,7 +142,7 @@ fun ProductoItemRow(
                     }
             ) {
                 Image(
-                    painter = painterResource(id = producto.imagenRes),
+                    painter = painterResource(id = drawableId),
                     contentDescription = producto.nombre,
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Crop
@@ -173,9 +183,13 @@ fun ProductoItemRow(
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Button(onClick = { if (cantidad > 1) cantidad-- }, modifier = Modifier.size(50.dp)) { Text("-", fontSize=20.sp) }
+                    Button(onClick = { if (cantidad > 1) cantidad-- }, modifier = Modifier.size(50.dp)) {
+                        Text("-", fontSize = 20.sp)
+                    }
                     Text("$cantidad", fontSize = 30.sp)
-                    Button(onClick = { cantidad++ }, modifier = Modifier.size(50.dp)) { Text("+", fontSize=20.sp) }
+                    Button(onClick = { cantidad++ }, modifier = Modifier.size(50.dp)) {
+                        Text("+", fontSize = 20.sp)
+                    }
                 }
 
                 Button(

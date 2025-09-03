@@ -13,7 +13,9 @@ import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material.icons.rounded.ShoppingCart
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,6 +31,7 @@ import java.util.Locale
 @Composable
 fun CarritoScreen(navController: NavHostController, viewModel: CarritoViewModel) {
     val carrito by viewModel.carrito.collectAsState()
+    val totalEnCarrito by remember(carrito) { derivedStateOf { carrito.sumOf { it.cantidad } } }
 
     Scaffold(
         topBar = {
@@ -50,7 +53,7 @@ fun CarritoScreen(navController: NavHostController, viewModel: CarritoViewModel)
                         BadgedBox(
                             badge = {
                                 if (viewModel.totalEnCarrito > 0) {
-                                    Badge { Text(viewModel.totalEnCarrito.toString()) }
+                                    Badge { Text(totalEnCarrito.toString()) }
                                 }
                             }
                         ) {

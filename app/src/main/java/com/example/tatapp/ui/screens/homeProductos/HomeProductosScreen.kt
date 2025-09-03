@@ -1,5 +1,6 @@
 package com.example.tatapp.ui.screens.homeProductos
 
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -18,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -26,19 +28,40 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.tatapp.R
-import com.example.tatapp.modelo.entity.CarritoEntity
 import com.example.tatapp.ui.screens.carrito.CarritoViewModel
 import com.example.tatapp.ui.screens.productos.ClaseProductos
-import com.example.tatapp.ui.screens.productos.productosBase
+import com.example.tatapp.ui.screens.productos.CategoriaProducto
+import com.example.tatapp.ui.components.drawableMap
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
+
+// --- Función para cargar JSON desde assets ---
+suspend fun loadProductosFromJson(context: Context): List<ClaseProductos> {
+    return withContext(Dispatchers.IO) {
+        val jsonString = context.assets.open("productos.json")
+            .bufferedReader()
+            .use { it.readText() }
+        Json.decodeFromString(jsonString)
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeProductosScreen(
     navController: NavHostController,
-    carritoViewModel: CarritoViewModel
+    carritoViewModel: CarritoViewModel,
+    context: Context = LocalContext.current
 ) {
-    val carrito by carritoViewModel.carrito.collectAsState()
-    val totalEnCarrito by remember(carrito) { derivedStateOf { carrito.sumOf { it.cantidad } } }
+
+    var productosJson by remember { mutableStateOf<List<ClaseProductos>>(emptyList()) }
+
+    // Cargar productos desde JSON una sola vez
+    LaunchedEffect(Unit) {
+        productosJson = loadProductosFromJson(context)
+    }
+
 
     var selectedItem by remember { mutableStateOf(0) }
     val todasCategorias = categoriasProductos + categoriasServicios
@@ -56,8 +79,8 @@ fun HomeProductosScreen(
                     IconButton(onClick = { navController.navigate("carrito") }) {
                         BadgedBox(
                             badge = {
-                                if (totalEnCarrito > 0) {
-                                    Badge { Text(totalEnCarrito.toString()) }
+                                if (carritoViewModel.totalEnCarrito > 0) {
+                                    Badge { Text(carritoViewModel.totalEnCarrito.toString()) }
                                 }
                             }
                         ) {
@@ -130,12 +153,14 @@ fun HomeProductosScreen(
 
             todasCategorias.forEach { categoria ->
                 item {
+                    val productosFiltrados = productosJson
+                        .filter { it.categoria.name == categoria.nombreCat || it.categoria.displayName == categoria.nombreCat }
+                        .sortedByDescending { it.evaluacion }
+                        .take(5)
+
                     CategoriaSection(
                         nombreCategoria = categoria.nombreCat,
-                        productos = productosBase
-                            .filter { it.categoria.name == categoria.nombreCat || it.categoria.displayName == categoria.nombreCat }
-                            .sortedByDescending { it.evaluacion }
-                            .take(5),
+                        productos = productosFiltrados,
                         onVerTodoClick = { navController.navigate("subcategorias/${categoria.nombreCat}") },
                         navController = navController
                     )
@@ -181,7 +206,7 @@ fun CategoriaSection(
         ) {
             items(productos) { producto ->
                 ProductoCard(
-                    nombre = producto.nombre,
+                    producto = producto,
                     onClick = {
                         navController.navigate("detalle/${producto.id}")
 
@@ -193,7 +218,10 @@ fun CategoriaSection(
 }
 
 @Composable
-fun ProductoCard(nombre: String, onClick: () -> Unit) {
+fun ProductoCard(
+    producto: ClaseProductos,
+    onClick: () -> Unit
+) {
     Card(
         shape = RoundedCornerShape(20.dp),
         modifier = Modifier
@@ -208,9 +236,10 @@ fun ProductoCard(nombre: String, onClick: () -> Unit) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {
+            val drawableId = drawableMap[producto.imagenRes] ?: R.drawable.ej_alim
             Image(
-                painter = painterResource(id = R.drawable.ej_alim),
-                contentDescription = nombre,
+                painter = painterResource(id = drawableId),
+                contentDescription = producto.nombre,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .height(140.dp)
@@ -218,7 +247,7 @@ fun ProductoCard(nombre: String, onClick: () -> Unit) {
             )
             Spacer(modifier = Modifier.height(12.dp))
             Text(
-                text = nombre,
+                text = producto.nombre,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Medium,
                 color = Color(0xFF222222),

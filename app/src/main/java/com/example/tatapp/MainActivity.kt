@@ -4,6 +4,12 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.ViewModelProvider
 import androidx.room.Room
@@ -20,6 +26,8 @@ import com.example.tatapp.ui.screens.detalleProducto.DetalleProductoScreen
 import com.example.tatapp.ui.screens.formRegistro.FormRegistro
 import com.example.tatapp.ui.screens.home.Home
 import com.example.tatapp.ui.screens.homeProductos.HomeProductosScreen
+import com.example.tatapp.ui.screens.homeProductos.loadProductosFromJson
+import com.example.tatapp.ui.screens.productos.ClaseProductos
 import com.example.tatapp.ui.screens.productos.ProductosScreen
 import com.example.tatapp.ui.screens.subcategorias.SubCategoriasScreen
 import com.example.tatapp.ui.theme.TatappTheme
@@ -34,7 +42,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-
         // Crear DB y ViewModel con Factory
         val db = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "app_db").build()
         val carritoFactory = CarritoViewModelFactory(db.carritoDao())
@@ -43,6 +50,16 @@ class MainActivity : ComponentActivity() {
         setContent {
             TatappTheme {
                 val navController = rememberNavController()
+                val context = LocalContext.current
+
+                // Estado para almacenar todos los productos cargados desde JSON
+                var productosJson by remember { mutableStateOf<List<ClaseProductos>>(emptyList()) }
+
+                // Cargar productos desde JSON solo una vez
+                LaunchedEffect(Unit) {
+                    productosJson = loadProductosFromJson(context)
+                }
+
                 NavHost(navController = navController, startDestination = "homeProductosScreen") {
 
                     composable("homeProductosScreen") {
@@ -69,7 +86,6 @@ class MainActivity : ComponentActivity() {
                     ) { backStackEntry ->
                         val categoria = backStackEntry.arguments?.getString("categoria") ?: ""
                         val subcategoria = backStackEntry.arguments?.getString("subcategoria") ?: ""
-                        // PASAMOS EL DAO, NO EL VIEWMODEL
                         ProductosScreen(
                             navController = navController,
                             carritoDao = db.carritoDao(),
@@ -87,11 +103,18 @@ class MainActivity : ComponentActivity() {
                         arguments = listOf(navArgument("productoId") { type = NavType.StringType })
                     ) { backStackEntry ->
                         val productoId = backStackEntry.arguments?.getString("productoId") ?: ""
-                        DetalleProductoScreen(
-                            navController = navController,
-                            carritoViewModel = carritoViewModel,
-                            productoId = productoId
-                        )
+                        val producto = productosJson.find { it.id == productoId }
+
+                        if (producto != null) {
+                            DetalleProductoScreen(
+                                navController = navController,
+                                carritoViewModel = carritoViewModel,
+                                producto = producto
+                            )
+                        } else {
+                            // Opcional: pantalla de error o mensaje de producto no encontrado
+                            // Puedes reemplazar con un Composable específico
+                        }
                     }
 
                     composable("home") { Home(navController) }
