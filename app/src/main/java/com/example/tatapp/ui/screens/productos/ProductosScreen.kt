@@ -3,6 +3,7 @@ package com.example.tatapp.ui.screens.productos
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -93,7 +94,12 @@ fun ProductosScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             items(productosViewModel.productosFiltrados) { producto ->
-                ProductoItemRow(producto, productosViewModel, scope)
+                ProductoItemRow(
+                    producto = producto,
+                    productosViewModel = productosViewModel,
+                    scope = scope,
+                    navController = navController // <- PASAMOS EL NAVCONTROLLER
+                )
             }
         }
     }
@@ -103,18 +109,28 @@ fun ProductosScreen(
 fun ProductoItemRow(
     producto: ClaseProductos,
     productosViewModel: ProductosViewModel,
-    scope: CoroutineScope
+    scope: CoroutineScope,
+    navController: NavHostController
 ) {
     var cantidad by remember { mutableStateOf(1) }
 
     Card(
-        modifier = Modifier.fillMaxWidth().height(350.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(350.dp),
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(containerColor = Color(0xFFE0F7FA)),
         border = BorderStroke(2.dp, Color.Gray)
     ) {
         Column {
-            Box(modifier = Modifier.fillMaxWidth().height(250.dp)) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(250.dp)
+                    .clickable {
+                        navController.navigate("detalle/${producto.id}")
+                    }
+            ) {
                 Image(
                     painter = painterResource(id = producto.imagenRes),
                     contentDescription = producto.nombre,
@@ -157,9 +173,9 @@ fun ProductoItemRow(
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Button(onClick = { if (cantidad > 1) cantidad-- }, modifier = Modifier.size(50.dp)) { Text(text="-", fontSize=20.sp) }
-                    Text(text = "$cantidad", fontSize = 30.sp)
-                    Button(onClick = { cantidad++ }, modifier = Modifier.size(50.dp)) { Text(text="+", fontSize=20.sp) }
+                    Button(onClick = { if (cantidad > 1) cantidad-- }, modifier = Modifier.size(50.dp)) { Text("-", fontSize=20.sp) }
+                    Text("$cantidad", fontSize = 30.sp)
+                    Button(onClick = { cantidad++ }, modifier = Modifier.size(50.dp)) { Text("+", fontSize=20.sp) }
                 }
 
                 Button(
@@ -167,10 +183,7 @@ fun ProductoItemRow(
                     modifier = Modifier.height(50.dp),
                     shape = RoundedCornerShape(12.dp)
                 ) {
-                    Text(
-                        text = "Agregar",
-                        fontSize = 24.sp
-                    )
+                    Text("Agregar", fontSize = 24.sp)
                 }
             }
         }

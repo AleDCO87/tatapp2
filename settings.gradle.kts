@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "tatapp"
+rootProject.name = "tatapp2"
 include(":app")
  

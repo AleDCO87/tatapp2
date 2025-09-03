@@ -16,6 +16,7 @@ import com.example.tatapp.modelo.database.AppDatabase
 import com.example.tatapp.ui.screens.carrito.CarritoScreen
 import com.example.tatapp.ui.screens.carrito.CarritoViewModel
 import com.example.tatapp.ui.screens.carrito.CarritoViewModelFactory
+import com.example.tatapp.ui.screens.detalleProducto.DetalleProductoScreen
 import com.example.tatapp.ui.screens.formRegistro.FormRegistro
 import com.example.tatapp.ui.screens.home.Home
 import com.example.tatapp.ui.screens.homeProductos.HomeProductosScreen
@@ -76,6 +77,18 @@ class MainActivity : ComponentActivity() {
 
                     composable("carrito") {
                         CarritoScreen(navController = navController, viewModel = carritoViewModel)
+                    }
+
+                    composable(
+                        "detalle/{productoId}",
+                        arguments = listOf(navArgument("productoId") { type = NavType.StringType })
+                    ) { backStackEntry ->
+                        val productoId = backStackEntry.arguments?.getString("productoId") ?: ""
+                        DetalleProductoScreen(
+                            navController = navController,
+                            carritoDao = db.carritoDao(),
+                            productoId = productoId
+                        )
                     }
 
                     composable("home") { Home(navController) }
