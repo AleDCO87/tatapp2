@@ -51,17 +51,31 @@ dependencies {
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
-    implementation(libs.androidx.material3)
+    implementation(libs.androidx.material3)              // Material 3 (mantén este)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.ads.mobile.sdk)
     implementation(libs.androidx.ui.text.google.fonts)
-    implementation(libs.androidx.compose.material)
-    implementation(libs.material3)
     implementation(libs.androidx.foundation)
     implementation(libs.androidx.splashscreen)
     implementation(libs.androidx.ui.text)
 
+    // ⚠️ Eliminados para evitar choques:
+    // implementation(libs.androidx.compose.material)     // Material 2 (no se usa)
+    // implementation(libs.material3)                     // Duplicado de M3
 
+    // ✅ Agregados: DataStore + Coroutines + ViewModel Compose
+    implementation("androidx.datastore:datastore-preferences:1.1.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.6")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.6")
+    implementation(libs.kotlinx.serialization.json)
+
+    // Room
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+    ksp(libs.room.compiler)
+
+    // Tests
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -69,10 +83,4 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-
-    implementation(libs.room.runtime)
-    implementation(libs.room.ktx)
-    ksp(libs.room.compiler)
-
-    implementation(libs.kotlinx.serialization.json)
 }

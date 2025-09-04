@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,6 +32,8 @@ import com.example.tatapp.ui.screens.productos.ClaseProductos
 import com.example.tatapp.ui.screens.productos.ProductosScreen
 import com.example.tatapp.ui.screens.subcategorias.SubCategoriasScreen
 import com.example.tatapp.ui.theme.TatappTheme
+import com.example.tatapp.viewmodel.SettingsViewModel
+import com.example.tatapp.viewmodel.SettingsViewModelFactory
 
 class MainActivity : ComponentActivity() {
 
@@ -48,7 +51,14 @@ class MainActivity : ComponentActivity() {
         carritoViewModel = ViewModelProvider(this, carritoFactory)[CarritoViewModel::class.java]
 
         setContent {
-            TatappTheme {
+            val settingsVm: SettingsViewModel =
+                androidx.lifecycle.viewmodel.compose.viewModel(
+                    factory = SettingsViewModelFactory(application)
+                )
+
+            val isDark by settingsVm.darkMode.collectAsState()
+
+            TatappTheme(darkTheme = isDark, dynamicColor = false) {
                 val navController = rememberNavController()
                 val context = LocalContext.current
 
@@ -65,6 +75,7 @@ class MainActivity : ComponentActivity() {
                     composable("homeProductosScreen") {
                         HomeProductosScreen(
                             navController = navController,
+                            settingsVm = settingsVm,
                             carritoViewModel = carritoViewModel
                         )
                     }

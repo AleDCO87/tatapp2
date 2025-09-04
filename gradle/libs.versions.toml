@@ -20,6 +20,7 @@ room = "2.7.2"
 ksp = "2.2.10-2.0.2"
 serialization = "2.2.10"
 serializationJson = "1.9.0"
+kotlinx-serialization-json = "1.7.3"
 
 
 [libraries]
