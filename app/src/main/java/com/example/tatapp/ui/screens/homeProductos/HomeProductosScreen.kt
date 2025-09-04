@@ -11,7 +11,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -28,6 +27,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.tatapp.R
+import com.example.tatapp.ui.components.TopBarOverflowMenu
 import com.example.tatapp.ui.screens.carrito.CarritoViewModel
 import com.example.tatapp.ui.screens.productos.ClaseProductos
 import com.example.tatapp.ui.screens.productos.CategoriaProducto
@@ -36,6 +36,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import com.example.tatapp.viewmodel.SettingsViewModel
+
 
 // --- Función para cargar JSON desde assets ---
 suspend fun loadProductosFromJson(context: Context): List<ClaseProductos> {
@@ -52,8 +56,11 @@ suspend fun loadProductosFromJson(context: Context): List<ClaseProductos> {
 fun HomeProductosScreen(
     navController: NavHostController,
     carritoViewModel: CarritoViewModel,
+    settingsVm: SettingsViewModel,
     context: Context = LocalContext.current
 ) {
+    val cs = MaterialTheme.colorScheme
+    val dark by settingsVm.darkMode.collectAsState()
 
     var productosJson by remember { mutableStateOf<List<ClaseProductos>>(emptyList()) }
 
@@ -67,13 +74,17 @@ fun HomeProductosScreen(
     val todasCategorias = categoriasProductos + categoriasServicios
 
     Scaffold(
+        containerColor = cs.background,
         topBar = {
             CenterAlignedTopAppBar(
                 title = { Text("TatApp", fontSize = 30.sp) },
                 navigationIcon = {
-                    IconButton(onClick = { navController.navigate("home") }) {
-                        Icon(Icons.Default.AccountCircle, contentDescription = "Perfil")
-                    }
+                    TopBarOverflowMenu(
+                        isDark = dark,
+                        onToggleDark = { settingsVm.toggleDark() },
+                        onOpenPerfil = { navController.navigate("home") },
+                        onOpenConfig = { /* navController.navigate("config") */ }
+                    )
                 },
                 actions = {
                     IconButton(onClick = { navController.navigate("carrito") }) {
@@ -134,7 +145,7 @@ fun HomeProductosScreen(
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFFF8F8F8))
+                .background(cs.background)
                 .padding(paddingValues),
             contentPadding = PaddingValues(vertical = 16.dp)
         ) {
@@ -144,6 +155,7 @@ fun HomeProductosScreen(
                     text = "¿Qué necesitas hoy?",
                     fontSize = 22.sp,
                     fontWeight = FontWeight.Bold,
+                    color = cs.onBackground,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp),
@@ -177,6 +189,7 @@ fun CategoriaSection(
     onVerTodoClick: () -> Unit,
     navController: NavHostController
 ) {
+    val cs = MaterialTheme.colorScheme
     Column(modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp)) {
         Row(
             modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
@@ -187,7 +200,7 @@ fun CategoriaSection(
                 text = nombreCategoria,
                 fontSize = 26.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color(0xFF222222)
+                color = cs.onBackground
             )
             Button(
                 onClick = onVerTodoClick,
@@ -222,17 +235,22 @@ fun ProductoCard(
     producto: ClaseProductos,
     onClick: () -> Unit
 ) {
+    val cs = MaterialTheme.colorScheme
     Card(
         shape = RoundedCornerShape(20.dp),
         modifier = Modifier
             .size(width = 160.dp, height = 200.dp)
             .clickable { onClick() },
-        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = cs.surface,
+            contentColor = cs.onSurface
+        )
     ) {
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .background(Color.White),
+                .fillMaxSize(),
+                //.background(Color.White),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {
