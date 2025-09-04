@@ -21,7 +21,7 @@ data class ClaseProductos(
     val id: String,
     val nombre: String,
     val precio: Int,
-    val imagenRes: String, // Aquí usamos String para leer desde JSON
+    val imagenRes: String,
     val descripcion: String,
     val categoria: CategoriaProducto,
     val subcategoria: String,

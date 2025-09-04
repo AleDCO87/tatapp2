@@ -73,6 +73,11 @@ fun HomeProductosScreen(
     var selectedItem by remember { mutableStateOf(0) }
     val todasCategorias = categoriasProductos + categoriasServicios
 
+    val carrito by carritoViewModel.carrito.collectAsState()
+    val totalEnCarrito by remember(carrito) {
+        mutableStateOf(carrito.sumOf { it.cantidad })
+    }
+
     Scaffold(
         containerColor = cs.background,
         topBar = {
@@ -90,8 +95,8 @@ fun HomeProductosScreen(
                     IconButton(onClick = { navController.navigate("carrito") }) {
                         BadgedBox(
                             badge = {
-                                if (carritoViewModel.totalEnCarrito > 0) {
-                                    Badge { Text(carritoViewModel.totalEnCarrito.toString()) }
+                                if (totalEnCarrito > 0) {
+                                    Badge { Text(totalEnCarrito.toString()) }
                                 }
                             }
                         ) {
