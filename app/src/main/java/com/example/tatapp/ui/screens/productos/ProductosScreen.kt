@@ -13,6 +13,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material.icons.rounded.ShoppingCart
+import androidx.compose.material3.ListItemDefaults.containerColor
+import androidx.compose.material3.ListItemDefaults.contentColor
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -58,6 +60,8 @@ fun ProductosScreen(
     val scope = rememberCoroutineScope()
 
     Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
+        contentColor = MaterialTheme.colorScheme.onBackground,
         topBar = {
             CenterAlignedTopAppBar(
                 title = { Text("Productos", fontSize = 30.sp) },
@@ -65,11 +69,21 @@ fun ProductosScreen(
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.AutoMirrored.Rounded.ArrowBack, "Volver")
                     }
-                }
+                },
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surface,            // Fondo
+                    titleContentColor = MaterialTheme.colorScheme.onSurface,       // Texto
+                    navigationIconContentColor = MaterialTheme.colorScheme.primary, // Iconos izq.
+                    actionIconContentColor = MaterialTheme.colorScheme.primary   // Iconos der.
+                )
+
             )
         },
         bottomBar = {
-            NavigationBar {
+            NavigationBar (
+                containerColor = MaterialTheme.colorScheme.surface,
+                contentColor = MaterialTheme.colorScheme.onSurface
+            ){
                 NavigationBarItem(
                     icon = { Icon(Icons.Rounded.Menu, contentDescription = "Productos") },
                     label = { Text("Productos", fontSize = 18.sp) },
@@ -129,8 +143,14 @@ fun ProductoItemRow(
             .fillMaxWidth()
             .height(350.dp),
         shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFE0F7FA)),
-        border = BorderStroke(2.dp, Color.Gray)
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface,
+            contentColor = MaterialTheme.colorScheme.onSurface
+        ),
+        border = BorderStroke(
+            width = 1.dp,
+            color = MaterialTheme.colorScheme.primary
+        )
     ) {
         Column {
             Box(

@@ -2,7 +2,7 @@ package com.example.tatapp.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val primaryLight = Color(0xFF904A42)
+val primaryLight = Color(0xFF904A42)   //uso
 val onPrimaryLight = Color(0xFFFFFFFF)
 val primaryContainerLight = Color(0xFFFFDAD5)
 val onPrimaryContainerLight = Color(0xFF73342C)
@@ -18,10 +18,10 @@ val errorLight = Color(0xFFBA1A1A)
 val onErrorLight = Color(0xFFFFFFFF)
 val errorContainerLight = Color(0xFFFFDAD6)
 val onErrorContainerLight = Color(0xFF93000A)
-val backgroundLight = Color(0xFFFFF8F7)
-val onBackgroundLight = Color(0xFF231918)
-val surfaceLight = Color(0xFFFFF8F7)
-val onSurfaceLight = Color(0xFF231918)
+val backgroundLight = Color(0xFFFFF8F7)     //uso
+val onBackgroundLight = Color(0xFF231918)   //uso
+val surfaceLight = Color(0xFFF8DCD9)       //uso
+val onSurfaceLight = Color(0xFF231918)     //uso
 val surfaceVariantLight = Color(0xFFF5DDDA)
 val onSurfaceVariantLight = Color(0xFF534341)
 val outlineLight = Color(0xFF857370)
@@ -37,7 +37,7 @@ val surfaceContainerLowLight = Color(0xFFFFF0EE)
 val surfaceContainerLight = Color(0xFFFCEAE7)
 val surfaceContainerHighLight = Color(0xFFF7E4E1)
 val surfaceContainerHighestLight = Color(0xFFF1DEDC)
-val primaryDark = Color(0xFFFFB4A9)
+val primaryDark = Color(0xFFF8DAD6)   //uso
 val onPrimaryDark = Color(0xFF561E18)
 val primaryContainerDark = Color(0xFF73342C)
 val onPrimaryContainerDark = Color(0xFFFFDAD5)
@@ -53,10 +53,10 @@ val errorDark = Color(0xFFFFB4AB)
 val onErrorDark = Color(0xFF690005)
 val errorContainerDark = Color(0xFF93000A)
 val onErrorContainerDark = Color(0xFFFFDAD6)
-val backgroundDark = Color(0xFF1A1110)
-val onBackgroundDark = Color(0xFFF1DEDC)
-val surfaceDark = Color(0xFF1A1110)
-val onSurfaceDark = Color(0xFFF1DEDC)
+val backgroundDark = Color(0xFF60514F)     //uso
+val onBackgroundDark = Color(0xFFF1DEDC)   //uso
+val surfaceDark = Color(0xFF4B3734)        //uso
+val onSurfaceDark = Color(0xFFF1DEDC)      //uso
 val surfaceVariantDark = Color(0xFF534341)
 val onSurfaceVariantDark = Color(0xFFD8C2BE)
 val outlineDark = Color(0xFFA08C89)

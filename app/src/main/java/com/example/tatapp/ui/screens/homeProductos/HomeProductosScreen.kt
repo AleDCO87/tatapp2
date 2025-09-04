@@ -1,6 +1,7 @@
 package com.example.tatapp.ui.screens.homeProductos
 
 import android.content.Context
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -24,17 +25,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.tatapp.R
 import com.example.tatapp.ui.components.TopBarOverflowMenu
 import com.example.tatapp.ui.screens.carrito.CarritoViewModel
 import com.example.tatapp.ui.screens.productos.ClaseProductos
-import com.example.tatapp.ui.screens.productos.CategoriaProducto
 import com.example.tatapp.ui.components.drawableMap
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
@@ -59,7 +57,6 @@ fun HomeProductosScreen(
     settingsVm: SettingsViewModel,
     context: Context = LocalContext.current
 ) {
-    val cs = MaterialTheme.colorScheme
     val dark by settingsVm.darkMode.collectAsState()
 
     var productosJson by remember { mutableStateOf<List<ClaseProductos>>(emptyList()) }
@@ -79,7 +76,8 @@ fun HomeProductosScreen(
     }
 
     Scaffold(
-        containerColor = cs.background,
+        containerColor = MaterialTheme.colorScheme.background,
+        contentColor = MaterialTheme.colorScheme.onBackground,
         topBar = {
             CenterAlignedTopAppBar(
                 title = { Text("TatApp", fontSize = 30.sp) },
@@ -96,26 +94,37 @@ fun HomeProductosScreen(
                         BadgedBox(
                             badge = {
                                 if (totalEnCarrito > 0) {
-                                    Badge { Text(totalEnCarrito.toString()) }
+                                    Badge (
+                                        containerColor = Color.Red,
+                                        contentColor = Color.White
+                                    ){ Text(totalEnCarrito.toString()) }
                                 }
-                            }
+                            },
                         ) {
                             Icon(Icons.Default.ShoppingCart, contentDescription = "Carrito")
                         }
                     }
                 },
-                modifier = Modifier.statusBarsPadding()
+
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surface,            // Fondo
+                    titleContentColor = MaterialTheme.colorScheme.onSurface,       // Texto
+                    navigationIconContentColor = MaterialTheme.colorScheme.primary, // Iconos izq.
+                    actionIconContentColor = MaterialTheme.colorScheme.primary   // Iconos der.
+                )
             )
         },
         bottomBar = {
             Surface(
                 tonalElevation = 4.dp,
-                color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.navigationBarsPadding()
+                color = MaterialTheme.colorScheme.surface,
+                contentColor = MaterialTheme.colorScheme.primary,
+                //modifier = Modifier.navigationBarsPadding()
             ) {
                 LazyRow(
                     contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    //modifier = Modifier.padding(bottom = 40.dp)
                 ) {
                     itemsIndexed(todasCategorias) { index, categoria ->
                         Column(
@@ -125,18 +134,16 @@ fun HomeProductosScreen(
                                     selectedItem = index
                                     navController.navigate("subcategorias/${categoria.nombreCat}")
                                 }
-                                .padding(vertical = 4.dp)
+                                .padding(top=4.dp, bottom=43.dp)
                         ) {
                             Icon(
                                 painter = painterResource(id = categoria.iconoCat),
                                 contentDescription = categoria.nombreCat,
                                 modifier = Modifier.size(28.dp),
-                                tint = Color.White
                             )
                             Text(
                                 text = categoria.nombreCat,
                                 fontSize = 12.sp,
-                                color = Color.White,
                                 textAlign = TextAlign.Center,
                                 modifier = Modifier.padding(top = 2.dp)
                             )
@@ -150,7 +157,7 @@ fun HomeProductosScreen(
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .background(cs.background)
+                .background(MaterialTheme.colorScheme.background)
                 .padding(paddingValues),
             contentPadding = PaddingValues(vertical = 16.dp)
         ) {
@@ -160,7 +167,7 @@ fun HomeProductosScreen(
                     text = "¿Qué necesitas hoy?",
                     fontSize = 22.sp,
                     fontWeight = FontWeight.Bold,
-                    color = cs.onBackground,
+                    color = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp),
@@ -240,7 +247,6 @@ fun ProductoCard(
     producto: ClaseProductos,
     onClick: () -> Unit
 ) {
-    val cs = MaterialTheme.colorScheme
     Card(
         shape = RoundedCornerShape(20.dp),
         modifier = Modifier
@@ -248,9 +254,14 @@ fun ProductoCard(
             .clickable { onClick() },
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
         colors = CardDefaults.cardColors(
-            containerColor = cs.surface,
-            contentColor = cs.onSurface
+            containerColor = MaterialTheme.colorScheme.surface,
+            contentColor = MaterialTheme.colorScheme.onSurface
+        ),
+        border = BorderStroke(
+            width = 1.dp,
+            color = MaterialTheme.colorScheme.primary
         )
+
     ) {
         Column(
             modifier = Modifier
@@ -273,8 +284,8 @@ fun ProductoCard(
                 text = producto.nombre,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Medium,
-                color = Color(0xFF222222),
-                modifier = Modifier.padding(horizontal = 8.dp)
+                modifier = Modifier.padding(horizontal = 8.dp),
+                textAlign = TextAlign.Center
             )
         }
     }

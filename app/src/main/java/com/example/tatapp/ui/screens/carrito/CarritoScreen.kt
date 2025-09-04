@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material.icons.rounded.ShoppingCart
@@ -36,11 +37,25 @@ fun CarritoScreen(navController: NavHostController, viewModel: CarritoViewModel)
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("Carrito", fontSize = 30.sp) }
+                title = { Text("Carrito", fontSize = 30.sp) },
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = "Volver")
+                    }
+                },
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surface,            // Fondo
+                    titleContentColor = MaterialTheme.colorScheme.onSurface,       // Texto
+                    navigationIconContentColor = MaterialTheme.colorScheme.onSurface, // Iconos izq.
+                    actionIconContentColor = MaterialTheme.colorScheme.onSurface   // Iconos der.
+                )
             )
         },
         bottomBar = {
-            NavigationBar {
+            NavigationBar (
+                containerColor = MaterialTheme.colorScheme.surface,
+                contentColor = MaterialTheme.colorScheme.onSurface
+            ){
                 NavigationBarItem(
                     icon = { Icon(Icons.Rounded.Menu, contentDescription = "Productos") },
                     label = { Text("Productos", fontSize = 18.sp) },

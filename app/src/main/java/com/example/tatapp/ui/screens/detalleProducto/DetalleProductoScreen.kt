@@ -38,6 +38,8 @@ fun DetalleProductoScreen(
     val scope = rememberCoroutineScope()
 
     Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
+        contentColor = MaterialTheme.colorScheme.onBackground,
         topBar = {
             CenterAlignedTopAppBar(
                 title = { Text("Detalle", fontSize = 30.sp) },
@@ -51,7 +53,10 @@ fun DetalleProductoScreen(
                         BadgedBox(
                             badge = {
                                 if (carritoViewModel.totalEnCarrito > 0) {
-                                    Badge { Text(totalEnCarrito.toString()) }
+                                    Badge (
+                                        containerColor = Color.Red,
+                                        contentColor = Color.White
+                                    ){ Text(totalEnCarrito.toString()) }
                                 }
                             }
                         ) {
@@ -59,7 +64,13 @@ fun DetalleProductoScreen(
                         }
                     }
                 },
-                modifier = Modifier.statusBarsPadding()
+                modifier = Modifier.statusBarsPadding(),
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surface,            // Fondo
+                    titleContentColor = MaterialTheme.colorScheme.onSurface,       // Texto
+                    navigationIconContentColor = MaterialTheme.colorScheme.onSurface, // Iconos izq.
+                    actionIconContentColor = MaterialTheme.colorScheme.onSurface   // Iconos der.
+                )
             )
         }
     ) { innerPadding ->
