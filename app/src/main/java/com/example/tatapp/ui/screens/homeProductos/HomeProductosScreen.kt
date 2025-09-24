@@ -36,6 +36,9 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import com.example.tatapp.ui.components.BottomHomeBar
+import com.example.tatapp.ui.components.BottomItem
+import com.example.tatapp.ui.components.SearchTopBar
 import com.example.tatapp.viewmodel.SettingsViewModel
 
 
@@ -57,101 +60,82 @@ fun HomeProductosScreen(
     settingsVm: SettingsViewModel,
     context: Context = LocalContext.current
 ) {
-    val dark by settingsVm.darkMode.collectAsState()
+    val isDark by settingsVm.darkMode.collectAsState()
+    var searchQuery by remember { mutableStateOf("") }
 
     var productosJson by remember { mutableStateOf<List<ClaseProductos>>(emptyList()) }
-
     // Cargar productos desde JSON una sola vez
     LaunchedEffect(Unit) {
         productosJson = loadProductosFromJson(context)
     }
 
-
-    var selectedItem by remember { mutableStateOf(0) }
-    val todasCategorias = categoriasProductos + categoriasServicios
-
     val carrito by carritoViewModel.carrito.collectAsState()
-    val totalEnCarrito by remember(carrito) {
-        mutableStateOf(carrito.sumOf { it.cantidad })
-    }
+    val totalEnCarrito = carrito.sumOf { it.cantidad }
+
+    val currentRoute = navController.currentBackStackEntryFlow
+        .collectAsState(initial = navController.currentBackStackEntry)
+        .value?.destination?.route ?: "home"
+
+    val items = listOf(
+        BottomItem("home", R.drawable.home, "Inicio"),
+        BottomItem("home", R.drawable.menu, "Menú"),
+        BottomItem(
+            "carrito",
+            R.drawable.shopping_cart,
+            "Carrito",
+            label = "CARRO",
+            showLabelAlways = true,
+            badgeCount = totalEnCarrito,
+            iconSize = 50.dp,
+            labelFontSize = 16.sp,
+            itemWidth = 84.dp
+        ),
+        BottomItem("home", R.drawable.user, "Perfil"),
+        BottomItem("home", R.drawable.figura, "Icono personalizado")
+    )
+
+    val todasCategorias = categoriasProductos + categoriasServicios
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
         contentColor = MaterialTheme.colorScheme.onBackground,
         topBar = {
-            CenterAlignedTopAppBar(
-                title = { Text("TatApp", fontSize = 30.sp) },
-                navigationIcon = {
-                    TopBarOverflowMenu(
-                        isDark = dark,
-                        onToggleDark = { settingsVm.toggleDark() },
-                        onOpenPerfil = { navController.navigate("home") },
-                        onOpenConfig = { /* navController.navigate("config") */ }
-                    )
+            SearchTopBar(
+                query = searchQuery,
+                onQueryChange = { searchQuery = it },
+                onSearch = { q ->
+                    // TODO: navega o filtra productos con "q"
+                    // navController.navigate("buscar?query=${Uri.encode(q)}")
                 },
-                actions = {
-                    IconButton(onClick = { navController.navigate("carrito") }) {
-                        BadgedBox(
-                            badge = {
-                                if (totalEnCarrito > 0) {
-                                    Badge (
-                                        containerColor = Color.Red,
-                                        contentColor = Color.White
-                                    ){ Text(totalEnCarrito.toString()) }
-                                }
-                            },
-                        ) {
-                            Icon(Icons.Default.ShoppingCart, contentDescription = "Carrito")
-                        }
-                    }
+                onVoiceClick = {
+                    // TODO: integra reconocimiento de voz cuando quieras
                 },
-
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface,            // Fondo
-                    titleContentColor = MaterialTheme.colorScheme.onSurface,       // Texto
-                    navigationIconContentColor = MaterialTheme.colorScheme.primary, // Iconos izq.
-                    actionIconContentColor = MaterialTheme.colorScheme.primary   // Iconos der.
-                )
+                isDark = isDark,
+                onToggleDark = { settingsVm.toggleDark() },
+                onOpenPerfil = { /*navController.navigate("perfil")*/ },
+                onOpenConfig = { /*navController.navigate("config")*/ }
             )
         },
         bottomBar = {
-            Surface(
-                tonalElevation = 4.dp,
-                color = MaterialTheme.colorScheme.surface,
-                contentColor = MaterialTheme.colorScheme.primary,
-                //modifier = Modifier.navigationBarsPadding()
-            ) {
-                LazyRow(
-                    contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    //modifier = Modifier.padding(bottom = 40.dp)
-                ) {
-                    itemsIndexed(todasCategorias) { index, categoria ->
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            modifier = Modifier
-                                .clickable {
-                                    selectedItem = index
-                                    navController.navigate("subcategorias/${categoria.nombreCat}")
-                                }
-                                .padding(top=4.dp, bottom=43.dp)
-                        ) {
-                            Icon(
-                                painter = painterResource(id = categoria.iconoCat),
-                                contentDescription = categoria.nombreCat,
-                                modifier = Modifier.size(28.dp),
-                            )
-                            Text(
-                                text = categoria.nombreCat,
-                                fontSize = 12.sp,
-                                textAlign = TextAlign.Center,
-                                modifier = Modifier.padding(top = 2.dp)
-                            )
+            BottomHomeBar(
+                items = items,
+                selectedId = currentRoute,
+                onItemSelected = { tapped ->
+                    if (tapped.id != currentRoute) {
+                        navController.navigate(tapped.id) {
+                            launchSingleTop = true
+                            restoreState = true
+                            popUpTo(navController.graph.startDestinationId) { saveState = true }
                         }
                     }
-                }
-            }
+                },
+                barHeight = 137.dp,
+                itemWidth = 68.dp,
+                iconSize = 40.dp,
+                labelFontSize = 16.sp
+            )
         }
+
     ) { paddingValues ->
 
         LazyColumn(

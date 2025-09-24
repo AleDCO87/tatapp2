@@ -24,7 +24,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.tatapp.R
 import com.example.tatapp.modelo.entity.CarritoEntity
+import com.example.tatapp.ui.components.BottomHomeBar
+import com.example.tatapp.ui.components.BottomItem
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -33,6 +36,27 @@ import java.util.Locale
 fun CarritoScreen(navController: NavHostController, viewModel: CarritoViewModel) {
     val carrito by viewModel.carrito.collectAsState()
     val totalEnCarrito by remember(carrito) { derivedStateOf { carrito.sumOf { it.cantidad } } }
+
+    val subtotal: Long = carrito.sumOf { it.precio * it.cantidad }.toLong()
+    val total: Long = viewModel.totalPrecio.toLong()
+
+    val items = listOf(
+        BottomItem("home", com.example.tatapp.R.drawable.home, "Inicio"),
+        BottomItem("home", com.example.tatapp.R.drawable.menu, "Menú"),
+        BottomItem(
+            "carrito",
+            com.example.tatapp.R.drawable.shopping_cart,
+            "Carrito",
+            label = "CARRO",
+            showLabelAlways = true,
+            badgeCount = totalEnCarrito,
+            iconSize = 50.dp,
+            labelFontSize = 16.sp,
+            itemWidth = 84.dp
+        ),
+        BottomItem("home", com.example.tatapp.R.drawable.user, "Perfil"),
+        BottomItem("home", R.drawable.figura, "Icono personalizado")
+    )
 
     Scaffold(
         topBar = {
@@ -52,40 +76,30 @@ fun CarritoScreen(navController: NavHostController, viewModel: CarritoViewModel)
             )
         },
         bottomBar = {
-            NavigationBar (
-                containerColor = MaterialTheme.colorScheme.surface,
-                contentColor = MaterialTheme.colorScheme.onSurface
-            ){
-                NavigationBarItem(
-                    icon = { Icon(Icons.Rounded.Menu, contentDescription = "Productos") },
-                    label = { Text("Productos", fontSize = 18.sp) },
-                    selected = false,
-                    onClick = { navController.popBackStack() }
-                )
-
-                NavigationBarItem(
-                    icon = {
-                        BadgedBox(
-                            badge = {
-                                if (viewModel.totalEnCarrito > 0) {
-                                    Badge { Text(totalEnCarrito.toString()) }
-                                }
-                            }
-                        ) {
-                            Icon(Icons.Rounded.ShoppingCart, contentDescription = "Carrito")
-                        }
-                    },
-                    label = { Text("Carrito", fontSize = 18.sp) },
-                    selected = true,
-                    onClick = { /* Ya estás aquí */ }
-                )
-            }
+            BottomHomeBar(
+                items = items,
+                selectedId = "carrito",
+                onItemSelected = { tapped ->
+                    when (tapped.id) {
+                        "home" -> navController.navigate("home")
+                        "menu" -> navController.navigate("home")
+                        "perfil" -> navController.navigate("home")
+                        "icono" -> navController.navigate("home")
+                        "carrito" -> navController.navigate("carrito")
+                    }
+                },
+                barHeight = 137.dp,
+                itemWidth = 68.dp,
+                iconSize = 40.dp,
+                labelFontSize = 16.sp
+            )
         }
     ) { innerPadding ->
         Column(
             modifier = Modifier
                 .padding(innerPadding)
-                .padding(8.dp)
+                .padding(horizontal = 16.dp, vertical = 12.dp)
+                .fillMaxSize()
         ) {
             if (carrito.isEmpty()) {
                 Text(
@@ -103,7 +117,16 @@ fun CarritoScreen(navController: NavHostController, viewModel: CarritoViewModel)
                     }
                 }
 
-                Row(
+                Spacer(Modifier.height(12.dp))
+
+                ResumenPedidoCard(
+                    subtotal = subtotal,
+                    total = total,
+                    onPagar = { /* TODO: flujo de pago */ },
+                    onVaciar = { viewModel.vaciarCarrito() }
+                )
+
+                /*Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier.fillMaxWidth()
@@ -117,7 +140,7 @@ fun CarritoScreen(navController: NavHostController, viewModel: CarritoViewModel)
                         onClick = { /* Acción para pagar */ },
                         modifier = Modifier.weight(1f).height(50.dp)
                     ) { Text("Pagar", fontSize = 20.sp) }
-                }
+                }*/
             }
         }
     }
@@ -128,8 +151,8 @@ fun CarritoItemRow(item: CarritoEntity, viewModel: CarritoViewModel) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFF1F8E9)),
-        border = BorderStroke(1.dp, Color.Gray)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
     ) {
         Row(
             modifier = Modifier
