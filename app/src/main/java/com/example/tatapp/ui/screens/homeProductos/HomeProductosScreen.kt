@@ -38,6 +38,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import com.example.tatapp.ui.components.BottomHomeBar
 import com.example.tatapp.ui.components.BottomItem
+import com.example.tatapp.ui.components.SearchTopBar
 import com.example.tatapp.viewmodel.SettingsViewModel
 
 
@@ -68,6 +69,7 @@ fun HomeProductosScreen(
         productosJson = loadProductosFromJson(context)
     }
 
+    var searchQuery by remember { mutableStateOf("") }
 
     var selectedItem by remember { mutableStateOf(0) }
     val todasCategorias = categoriasProductos + categoriasServicios
@@ -100,39 +102,19 @@ fun HomeProductosScreen(
         containerColor = MaterialTheme.colorScheme.background,
         contentColor = MaterialTheme.colorScheme.onBackground,
         topBar = {
-            CenterAlignedTopAppBar(
-                title = { Text("TatApp", fontSize = 30.sp) },
-                navigationIcon = {
-                    TopBarOverflowMenu(
-                        isDark = dark,
-                        onToggleDark = { settingsVm.toggleDark() },
-                        onOpenPerfil = { navController.navigate("home") },
-                        onOpenConfig = { /* navController.navigate("config") */ }
-                    )
+            SearchTopBar(
+                query = searchQuery,
+                onQueryChange = { searchQuery = it },
+                onSearch = { q ->
+                    // TODO: navega o filtra productos con "q"
+                    // navController.navigate("buscar?query=${Uri.encode(q)}")
                 },
-                actions = {
-                    IconButton(onClick = { navController.navigate("carrito") }) {
-                        BadgedBox(
-                            badge = {
-                                if (totalEnCarrito > 0) {
-                                    Badge (
-                                        containerColor = Color.Red,
-                                        contentColor = Color.White
-                                    ){ Text(totalEnCarrito.toString()) }
-                                }
-                            },
-                        ) {
-                            Icon(Icons.Default.ShoppingCart, contentDescription = "Carrito")
-                        }
-                    }
+                onVoiceClick = {
+                    // TODO: integra reconocimiento de voz cuando quieras
                 },
-
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface,            // Fondo
-                    titleContentColor = MaterialTheme.colorScheme.onSurface,       // Texto
-                    navigationIconContentColor = MaterialTheme.colorScheme.primary, // Iconos izq.
-                    actionIconContentColor = MaterialTheme.colorScheme.primary   // Iconos der.
-                )
+                onMenuClick = {
+                    // TODO: abrir drawer o sheet (por ahora puede quedar vacío)
+                }
             )
         },
         bottomBar = {
