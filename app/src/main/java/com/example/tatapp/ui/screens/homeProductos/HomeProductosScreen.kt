@@ -60,24 +60,22 @@ fun HomeProductosScreen(
     settingsVm: SettingsViewModel,
     context: Context = LocalContext.current
 ) {
-    val dark by settingsVm.darkMode.collectAsState()
+    val isDark by settingsVm.darkMode.collectAsState()
+    var searchQuery by remember { mutableStateOf("") }
 
     var productosJson by remember { mutableStateOf<List<ClaseProductos>>(emptyList()) }
-
     // Cargar productos desde JSON una sola vez
     LaunchedEffect(Unit) {
         productosJson = loadProductosFromJson(context)
     }
 
-    var searchQuery by remember { mutableStateOf("") }
-
-    var selectedItem by remember { mutableStateOf(0) }
-    val todasCategorias = categoriasProductos + categoriasServicios
-
     val carrito by carritoViewModel.carrito.collectAsState()
     val totalEnCarrito = carrito.sumOf { it.cantidad }
 
-    var selectedId by remember { mutableStateOf("home") }
+    val currentRoute = navController.currentBackStackEntryFlow
+        .collectAsState(initial = navController.currentBackStackEntry)
+        .value?.destination?.route ?: "home"
+
     val items = listOf(
         BottomItem("home", R.drawable.home, "Inicio"),
         BottomItem("home", R.drawable.menu, "Menú"),
@@ -95,8 +93,8 @@ fun HomeProductosScreen(
         BottomItem("home", R.drawable.user, "Perfil"),
         BottomItem("home", R.drawable.figura, "Icono personalizado")
     )
-    val currentRoute = navController.currentBackStackEntryFlow.collectAsState(initial = navController.currentBackStackEntry).value?.destination?.route
-        ?: "home"
+
+    val todasCategorias = categoriasProductos + categoriasServicios
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
@@ -112,9 +110,10 @@ fun HomeProductosScreen(
                 onVoiceClick = {
                     // TODO: integra reconocimiento de voz cuando quieras
                 },
-                onMenuClick = {
-                    // TODO: abrir drawer o sheet (por ahora puede quedar vacío)
-                }
+                isDark = isDark,
+                onToggleDark = { settingsVm.toggleDark() },
+                onOpenPerfil = { /*navController.navigate("perfil")*/ },
+                onOpenConfig = { /*navController.navigate("config")*/ }
             )
         },
         bottomBar = {

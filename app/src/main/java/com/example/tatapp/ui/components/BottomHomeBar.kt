@@ -6,6 +6,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Badge
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -29,7 +31,8 @@ data class BottomItem(
     val badgeCount: Int = 0,
     val iconSize: Dp? = null,
     val labelFontSize: TextUnit? = null,
-    val itemWidth: Dp? = null
+    val itemWidth: Dp? = null,
+    val tintIcon: Boolean = true
 )
 
 @Composable
@@ -38,8 +41,9 @@ fun BottomHomeBar(
     selectedId: String,
     onItemSelected: (BottomItem) -> Unit,
     modifier: Modifier = Modifier,
-    backgroundColor: Color = Color.Black,
-    contentColor: Color = Color.White,
+    backgroundColor: Color = MaterialTheme.colorScheme.surface,
+    contentColor: Color = MaterialTheme.colorScheme.onSurface,
+    badgeColor: Color = MaterialTheme.colorScheme.error,
     barHeight: Dp = 137.dp,
     itemWidth: Dp = 68.dp,
     iconSize: Dp = 60.dp,
@@ -84,10 +88,12 @@ private fun BottomBarItem(
     labelColor: Color,
     itemWidth: Dp = 60.dp,
     iconSize: Dp = 30.dp,
-    labelFontSize: TextUnit = 16.sp
+    labelFontSize: TextUnit = 16.sp,
+    badgeColor: Color = MaterialTheme.colorScheme.error
 ) {
     val effectiveIconSize = item.iconSize ?: iconSize
     val effectiveLabelSize = item.labelFontSize ?: labelFontSize
+    val effectiveTint = if (item.tintIcon) iconTint else Color.Unspecified
 
     Column(
         modifier = Modifier
@@ -97,17 +103,16 @@ private fun BottomBarItem(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        val iconPainter = painterResource(id = item.iconRes)
 
         Box(
             modifier = Modifier.requiredSize(effectiveIconSize), // <- corregido
             contentAlignment = Alignment.Center
         ) {
-            Image(
-                painter = iconPainter,
+            Icon(
+                painter = painterResource(id = item.iconRes),
                 contentDescription = item.contentDescription,
                 modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Fit
+                tint = effectiveTint
             )
             if (item.badgeCount > 0) {
                 Box(
@@ -117,7 +122,7 @@ private fun BottomBarItem(
                 ) {
                     Badge(
                         modifier = Modifier.size(25.dp),
-                        containerColor = Color(0xFFFF3B00)
+                        containerColor = badgeColor
                     ) {
                         Text(
                             text = item.badgeCount.toString(),

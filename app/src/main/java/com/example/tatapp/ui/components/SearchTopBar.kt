@@ -24,7 +24,10 @@ fun SearchTopBar(
     onQueryChange: (String) -> Unit,
     onSearch: (String) -> Unit,
     onVoiceClick: () -> Unit,
-    onMenuClick: () -> Unit,
+    isDark: Boolean,
+    onToggleDark: () -> Unit,
+    onOpenPerfil: () -> Unit,
+    onOpenConfig: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Surface(
@@ -39,19 +42,22 @@ fun SearchTopBar(
                 .fillMaxWidth()
                 .padding(horizontal = 12.dp, vertical = 12.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically) {
-            Box(
-                modifier = Modifier
-                    .size(40.dp)
-                    .clickable(onClick = onMenuClick),
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.menu),
-                    contentDescription = "Menú",
-                    modifier = Modifier.size(40.dp),
-                    tint = Color.Unspecified
-                )
-            }
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            TopBarOverflowMenu(
+                isDark = isDark,
+                onToggleDark = onToggleDark,
+                onOpenPerfil = onOpenPerfil,
+                onOpenConfig = onOpenConfig,
+                trigger = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.menu),
+                        contentDescription = "Menu",
+                        tint = Color.Unspecified,
+                        modifier = Modifier.size(40.dp)
+                    )
+                }
+            )
 
             // Caja de búsqueda
             TextField(
@@ -76,14 +82,14 @@ fun SearchTopBar(
                             Icon(
                                 painter = painterResource(id = R.drawable.mic),
                                 contentDescription = "Buscar por voz",
-                                tint = Color.Unspecified
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
                         IconButton(onClick = { onSearch(query) }) {
                             Icon(
                                 painter = painterResource(id = R.drawable.search),
                                 contentDescription = "Buscar",
-                                tint = Color.Unspecified
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
                     }
