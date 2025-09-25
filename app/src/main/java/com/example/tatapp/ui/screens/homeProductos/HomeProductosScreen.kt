@@ -38,6 +38,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import com.example.tatapp.ui.components.BottomHomeBar
 import com.example.tatapp.ui.components.BottomItem
+import com.example.tatapp.ui.components.CarruselCategorias
 import com.example.tatapp.ui.components.SearchTopBar
 import com.example.tatapp.viewmodel.SettingsViewModel
 
@@ -145,6 +146,15 @@ fun HomeProductosScreen(
                 .padding(paddingValues),
             contentPadding = PaddingValues(vertical = 16.dp)
         ) {
+
+            item {
+                CarruselCategorias(
+                    categorias = categoriasProductos + categoriasServicios,
+                    onCategoriaClick = { categoria ->
+                        navController.navigate("subcategorias/${categoria.nombreCat}")
+                    }
+                )
+            }
 
             item {
                 Text(

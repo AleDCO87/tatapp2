@@ -1,4 +1,4 @@
-package com.example.tatapp.modelo.entity
+package com.example.tatapp.data.modelo.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

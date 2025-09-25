@@ -2,7 +2,7 @@ package com.example.tatapp.ui.screens.carrito
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.tatapp.modelo.dao.CarritoDao
+import com.example.tatapp.data.modelo.dao.CarritoDao
 
 class CarritoViewModelFactory(private val dao: CarritoDao) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {

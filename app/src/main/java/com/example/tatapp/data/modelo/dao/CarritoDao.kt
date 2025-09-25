@@ -1,7 +1,7 @@
-package com.example.tatapp.modelo.dao
+package com.example.tatapp.data.modelo.dao
 
 import androidx.room.*
-import com.example.tatapp.modelo.entity.CarritoEntity
+import com.example.tatapp.data.modelo.entity.CarritoEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao

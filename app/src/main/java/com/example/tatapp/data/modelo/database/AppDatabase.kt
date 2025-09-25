@@ -1,9 +1,9 @@
-package com.example.tatapp.modelo.database
+package com.example.tatapp.data.modelo.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.example.tatapp.modelo.dao.CarritoDao
-import com.example.tatapp.modelo.entity.CarritoEntity
+import com.example.tatapp.data.modelo.dao.CarritoDao
+import com.example.tatapp.data.modelo.entity.CarritoEntity
 
 @Database(
     entities = [CarritoEntity::class],

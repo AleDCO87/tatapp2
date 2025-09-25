@@ -13,20 +13,20 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material.icons.rounded.ShoppingCart
-import androidx.compose.material3.ListItemDefaults.containerColor
-import androidx.compose.material3.ListItemDefaults.contentColor
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.tatapp.R
-import com.example.tatapp.modelo.dao.CarritoDao
+import com.example.tatapp.data.modelo.dao.CarritoDao
+import com.example.tatapp.data.repositorio.ProductosRepositoryJson
 import com.example.tatapp.ui.components.drawableMap
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -41,7 +41,12 @@ fun ProductosScreen(
     categoria: String,
     subcategoria: String
 ) {
-    val productosDataViewModel: ProductosDataViewModel = viewModel()
+    val context = LocalContext.current
+    val repository = ProductosRepositoryJson(context)
+
+    val productosDataViewModel: ProductosDataViewModel = viewModel(
+        factory = ProductosDataViewModelFactory(repository)
+    )
     val productos by productosDataViewModel.productos.collectAsState()
 
     val productosViewModel: ProductosViewModel = viewModel(
