@@ -16,7 +16,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.tatapp.modelo.entity.CarritoEntity
+import com.example.tatapp.data.modelo.entity.CarritoEntity
 import com.example.tatapp.ui.components.drawableMap
 import com.example.tatapp.ui.screens.carrito.CarritoViewModel
 import com.example.tatapp.ui.screens.productos.ClaseProductos

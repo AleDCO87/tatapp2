@@ -8,13 +8,13 @@ data class CategoriaItem(
 )
 
 val categoriasProductos = listOf(
-    CategoriaItem("Alimentos", R.drawable.outline_store),
-    CategoriaItem("Salud", R.drawable.outline_store),
-    CategoriaItem("Mascotas", R.drawable.outline_store),
-    CategoriaItem("Hogar", R.drawable.outline_store),
-    CategoriaItem("Jardín", R.drawable.outline_store),
-    CategoriaItem("Belleza", R.drawable.outline_store),
-    CategoriaItem("Regalos", R.drawable.outline_store)
+    CategoriaItem("Alimentos", R.drawable.alimentos),
+    CategoriaItem("Salud", R.drawable.salud),
+    CategoriaItem("Mascotas", R.drawable.mascotas),
+    CategoriaItem("Hogar", R.drawable.hogar),
+    CategoriaItem("Jardín", R.drawable.jardin),
+    CategoriaItem("Belleza", R.drawable.belleza),
+    CategoriaItem("Regalos", R.drawable.regalos)
 )
 
 val categoriasServicios = listOf(

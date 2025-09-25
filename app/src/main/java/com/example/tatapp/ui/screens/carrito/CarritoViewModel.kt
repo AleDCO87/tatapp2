@@ -2,9 +2,8 @@ package com.example.tatapp.ui.screens.carrito
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.tatapp.modelo.dao.CarritoDao
-import com.example.tatapp.modelo.entity.CarritoEntity
-import com.example.tatapp.ui.screens.productos.ClaseProductos
+import com.example.tatapp.data.modelo.dao.CarritoDao
+import com.example.tatapp.data.modelo.entity.CarritoEntity
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
