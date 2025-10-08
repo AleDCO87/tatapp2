@@ -2,6 +2,8 @@ package com.example.tatapp.ui.screens.productos
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.tatapp.data.clases.CategoriaProducto
+import com.example.tatapp.data.clases.ClaseProductos
 import com.example.tatapp.data.repositorio.ProductosRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

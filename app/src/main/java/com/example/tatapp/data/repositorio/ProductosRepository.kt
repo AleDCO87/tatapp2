@@ -1,8 +1,8 @@
 package com.example.tatapp.data.repositorio
 
 import android.content.Context
-import com.example.tatapp.ui.screens.productos.ClaseProductos
-import com.example.tatapp.ui.screens.productos.CategoriaProducto
+import com.example.tatapp.data.clases.ClaseProductos
+import com.example.tatapp.data.clases.CategoriaProducto
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json

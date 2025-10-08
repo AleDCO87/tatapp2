@@ -35,7 +35,7 @@ fun SearchTopBar(
             .fillMaxWidth()
             .statusBarsPadding(),
         color = MaterialTheme.colorScheme.surface,
-        tonalElevation = 2.dp
+        //tonalElevation = 2.dp
     ) {
         Row(
             modifier = Modifier
@@ -48,12 +48,12 @@ fun SearchTopBar(
                 isDark = isDark,
                 onToggleDark = onToggleDark,
                 onOpenPerfil = onOpenPerfil,
-                onOpenConfig = onOpenConfig,
+                //onOpenConfig = onOpenConfig,
                 trigger = {
                     Icon(
                         painter = painterResource(id = R.drawable.menu),
                         contentDescription = "Menu",
-                        tint = Color.Unspecified,
+                        tint = MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier.size(40.dp)
                     )
                 }
@@ -70,6 +70,10 @@ fun SearchTopBar(
                     .weight(1f)
                     .height(60.dp),
                 colors = TextFieldDefaults.colors(
+                    focusedTextColor= MaterialTheme.colorScheme.onBackground,
+                    unfocusedTextColor= MaterialTheme.colorScheme.onBackground,
+                    focusedPlaceholderColor= MaterialTheme.colorScheme.onBackground,
+                    unfocusedPlaceholderColor= MaterialTheme.colorScheme.onBackground,
                     focusedContainerColor = MaterialTheme.colorScheme.background,
                     unfocusedContainerColor = MaterialTheme.colorScheme.background,
                     disabledContainerColor = MaterialTheme.colorScheme.background,
@@ -82,14 +86,14 @@ fun SearchTopBar(
                             Icon(
                                 painter = painterResource(id = R.drawable.mic),
                                 contentDescription = "Buscar por voz",
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                tint = MaterialTheme.colorScheme.onBackground
                             )
                         }
                         IconButton(onClick = { onSearch(query) }) {
                             Icon(
                                 painter = painterResource(id = R.drawable.search),
                                 contentDescription = "Buscar",
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                tint = MaterialTheme.colorScheme.onBackground
                             )
                         }
                     }

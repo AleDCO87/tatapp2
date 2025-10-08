@@ -5,6 +5,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -14,6 +16,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.tatapp.ui.components.PasswordField
@@ -22,6 +25,7 @@ import com.example.tatapp.ui.components.formatearRUT
 import com.example.tatapp.ui.components.rutCompleto
 import kotlinx.coroutines.delay
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FormRegistro(
     navController: NavController,
@@ -52,6 +56,22 @@ fun FormRegistro(
     }
 
     Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = { Text("Registro", fontSize = 30.sp) },
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = "Volver")
+                    }
+                },
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surface,            // Fondo
+                    titleContentColor = MaterialTheme.colorScheme.onSurface,       // Texto
+                    navigationIconContentColor = MaterialTheme.colorScheme.onSurface, // Iconos izq.
+                    actionIconContentColor = MaterialTheme.colorScheme.onSurface   // Iconos der.
+                )
+            )
+        },
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
     ) { padding ->
         Column(
@@ -83,6 +103,11 @@ fun FormRegistro(
                 },
                 keyboardActions = KeyboardActions(
                     onDone = { focusManager.clearFocus() }
+                ),
+                colors= OutlinedTextFieldDefaults.colors(
+                    focusedLabelColor = MaterialTheme.colorScheme.onBackground,
+                    unfocusedLabelColor = MaterialTheme.colorScheme.onBackground,
+                    errorLabelColor = MaterialTheme.colorScheme.error,
                 )
             )
 
@@ -101,6 +126,11 @@ fun FormRegistro(
                 },
                 keyboardActions = KeyboardActions(
                     onDone = { focusManager.clearFocus() }
+                ),
+                colors= OutlinedTextFieldDefaults.colors(
+                    focusedLabelColor = MaterialTheme.colorScheme.onBackground,
+                    unfocusedLabelColor = MaterialTheme.colorScheme.onBackground,
+                    errorLabelColor = MaterialTheme.colorScheme.error,
                 )
             )
 
@@ -132,6 +162,11 @@ fun FormRegistro(
                 },
                 keyboardActions = KeyboardActions(
                     onDone = { focusManager.clearFocus() }
+                ),
+                colors= OutlinedTextFieldDefaults.colors(
+                    focusedLabelColor = MaterialTheme.colorScheme.onBackground,
+                    unfocusedLabelColor = MaterialTheme.colorScheme.onBackground,
+                    errorLabelColor = MaterialTheme.colorScheme.error,
                 )
             )
 
@@ -151,6 +186,11 @@ fun FormRegistro(
                 },
                 keyboardActions = KeyboardActions(
                     onDone = { focusManager.clearFocus() }
+                ),
+                colors= OutlinedTextFieldDefaults.colors(
+                    focusedLabelColor = MaterialTheme.colorScheme.onBackground,
+                    unfocusedLabelColor = MaterialTheme.colorScheme.onBackground,
+                    errorLabelColor = MaterialTheme.colorScheme.error,
                 )
             )
 
@@ -170,6 +210,11 @@ fun FormRegistro(
                 },
                 keyboardActions = KeyboardActions(
                     onDone = { focusManager.clearFocus() }
+                ),
+                colors= OutlinedTextFieldDefaults.colors(
+                    focusedLabelColor = MaterialTheme.colorScheme.onBackground,
+                    unfocusedLabelColor = MaterialTheme.colorScheme.onBackground,
+                    errorLabelColor = MaterialTheme.colorScheme.error,
                 )
             )
 
@@ -188,6 +233,7 @@ fun FormRegistro(
                 modifier = Modifier.fillMaxWidth(),
                 label = "Contraseña",
 
+
             )
 
             Spacer(Modifier.height(8.dp))
@@ -200,6 +246,11 @@ fun FormRegistro(
                 label = { Text("Confirmar contraseña") },
                 visualTransformation = if (confirmReveal) VisualTransformation.None else PasswordVisualTransformation(),
                 modifier = Modifier.fillMaxWidth(),
+                colors= OutlinedTextFieldDefaults.colors(
+                    focusedLabelColor = MaterialTheme.colorScheme.onBackground,
+                    unfocusedLabelColor = MaterialTheme.colorScheme.onBackground,
+                    errorLabelColor = MaterialTheme.colorScheme.error,
+                ),
                 singleLine = true,
                 isError = vm.errorConfirmPassword != null,
                 supportingText = {

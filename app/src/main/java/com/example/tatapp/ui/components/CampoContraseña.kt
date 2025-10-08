@@ -13,6 +13,7 @@ import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -93,6 +94,11 @@ fun PasswordField(
                 Text(if (reveal) "Ocultar" else "Mostrar")
             }
         },
+        colors= OutlinedTextFieldDefaults.colors(
+            focusedLabelColor = MaterialTheme.colorScheme.onBackground,
+            unfocusedLabelColor = MaterialTheme.colorScheme.onBackground,
+            errorLabelColor = MaterialTheme.colorScheme.error,
+        ),
         modifier = modifier
             .fillMaxWidth()
             .onFocusChanged { f -> focused = f.isFocused },

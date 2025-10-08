@@ -14,6 +14,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,13 +30,15 @@ import androidx.navigation.NavHostController
 import com.example.tatapp.R
 import com.example.tatapp.ui.components.TopBarOverflowMenu
 import com.example.tatapp.ui.screens.carrito.CarritoViewModel
-import com.example.tatapp.ui.screens.productos.ClaseProductos
+import com.example.tatapp.data.clases.ClaseProductos
 import com.example.tatapp.ui.components.drawableMap
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import com.example.tatapp.data.clases.categoriasProductos
+import com.example.tatapp.data.clases.categoriasServicios
 import com.example.tatapp.ui.components.BottomHomeBar
 import com.example.tatapp.ui.components.BottomItem
 import com.example.tatapp.ui.components.CarruselCategorias
@@ -98,8 +101,8 @@ fun HomeProductosScreen(
     val todasCategorias = categoriasProductos + categoriasServicios
 
     Scaffold(
-        containerColor = MaterialTheme.colorScheme.background,
-        contentColor = MaterialTheme.colorScheme.onBackground,
+        //containerColor = MaterialTheme.colorScheme.background,
+        //contentColor = MaterialTheme.colorScheme.onBackground,
         topBar = {
             SearchTopBar(
                 query = searchQuery,
@@ -113,8 +116,8 @@ fun HomeProductosScreen(
                 },
                 isDark = isDark,
                 onToggleDark = { settingsVm.toggleDark() },
-                onOpenPerfil = { /*navController.navigate("perfil")*/ },
-                onOpenConfig = { /*navController.navigate("config")*/ }
+                onOpenPerfil = { navController.navigate("login") },
+                onOpenConfig = { navController.navigate("config") }
             )
         },
         bottomBar = {
@@ -130,6 +133,8 @@ fun HomeProductosScreen(
                         }
                     }
                 },
+                //backgroundColor = MaterialTheme.colorScheme.surfaceVariant,
+                //contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                 barHeight = 137.dp,
                 itemWidth = 68.dp,
                 iconSize = 40.dp,
@@ -211,7 +216,10 @@ fun CategoriaSection(
             Button(
                 onClick = onVerTodoClick,
                 shape = RoundedCornerShape(12.dp),
-                contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp)
+                contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary     )
             ) {
                 Text(text = "Ver todo", fontSize = 18.sp)
             }
@@ -248,12 +256,12 @@ fun ProductoCard(
             .clickable { onClick() },
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface,
+            containerColor = MaterialTheme.colorScheme.background,
             contentColor = MaterialTheme.colorScheme.onSurface
         ),
         border = BorderStroke(
             width = 1.dp,
-            color = MaterialTheme.colorScheme.primary
+            color = MaterialTheme.colorScheme.surface
         )
 
     ) {

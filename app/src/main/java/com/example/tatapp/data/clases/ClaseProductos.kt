@@ -1,4 +1,4 @@
-package com.example.tatapp.ui.screens.productos
+package com.example.tatapp.data.clases
 
 import kotlinx.serialization.Serializable
 
@@ -27,4 +27,3 @@ data class ClaseProductos(
     val subcategoria: String,
     val evaluacion: Float
 )
-

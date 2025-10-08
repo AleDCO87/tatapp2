@@ -19,7 +19,7 @@ import androidx.navigation.NavHostController
 import com.example.tatapp.data.modelo.entity.CarritoEntity
 import com.example.tatapp.ui.components.drawableMap
 import com.example.tatapp.ui.screens.carrito.CarritoViewModel
-import com.example.tatapp.ui.screens.productos.ClaseProductos
+import com.example.tatapp.data.clases.ClaseProductos
 import kotlinx.coroutines.launch
 import com.example.tatapp.R
 

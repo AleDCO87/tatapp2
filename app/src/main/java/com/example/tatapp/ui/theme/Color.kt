@@ -72,3 +72,18 @@ val surfaceContainerLowDark = Color(0xFF231918)
 val surfaceContainerDark = Color(0xFF271D1C)
 val surfaceContainerHighDark = Color(0xFF322826)
 val surfaceContainerHighestDark = Color(0xFF3D3231)
+
+
+val tatapBarraInferior = Color(0xFF000000)
+
+val tatapTextoBarraInferior = Color(0xFFffffff)
+
+val tatapFondo = Color(0xFFffffff)
+
+val tatapSuperficies = Color(0xFFD9D9D9)
+
+val tatapPrimary = Color(0xFFFF0000)
+
+val tatapTextFondo = Color(0xFF000000)
+
+val error = Color(0xFFBA1A1A)

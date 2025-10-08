@@ -2,6 +2,7 @@ package com.example.tatapp.ui.screens.productos
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.tatapp.data.clases.CategoriaProducto
 import com.example.tatapp.data.modelo.dao.CarritoDao
 
 class ProductosViewModelFactory(
