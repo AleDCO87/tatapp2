@@ -26,7 +26,9 @@ import com.example.tatapp.R
 import com.example.tatapp.ui.components.BottomHomeBar
 import com.example.tatapp.ui.components.BottomItem
 import com.example.tatapp.ui.components.CarruselCategorias
-import com.example.tatapp.ui.screens.homeProductos.CategoriaItem
+import com.example.tatapp.data.clases.CategoriaItem
+import com.example.tatapp.data.clases.categoriasProductos
+import com.example.tatapp.data.clases.categoriasServicios
 import com.example.tatapp.ui.components.SearchTopBar
 import com.example.tatapp.ui.screens.carrito.CarritoViewModel
 
@@ -41,15 +43,6 @@ fun Home(
     var query by remember { mutableStateOf("")}
 
     val totalEnCarrito = carritoViewModel.totalEnCarrito
-
-    val categorias = remember {
-        listOf(
-            CategoriaItem("Alimentos",R.drawable.alimentos),
-            CategoriaItem("Hogar",R.drawable.hogar),
-            CategoriaItem("Salud",R.drawable.salud),
-            CategoriaItem("Mascotas", R.drawable.mascotas),
-        )
-    }
 
     // bottom bar state
     var selectedBottom by remember { mutableStateOf("home") }
@@ -80,7 +73,7 @@ fun Home(
                 onVoiceClick = { /* TODO mic */ },
                 isDark = isDark,
                 onToggleDark = onToggleDark,
-                onOpenPerfil = { navController.navigate("perfil") },
+                onOpenPerfil = { navController.navigate("login") },
                 onOpenConfig = { navController.navigate("config") }
             )
         },
@@ -133,9 +126,8 @@ fun Home(
             Spacer(Modifier.height(8.dp))
 
             CarruselCategorias(
-                categorias = categorias,
+                categorias = categoriasProductos + categoriasServicios,
                 onCategoriaClick = { categoria ->
-                    // navega a tu flujo existente
                     navController.navigate("subcategorias/${categoria.nombreCat}")
                 }
             )

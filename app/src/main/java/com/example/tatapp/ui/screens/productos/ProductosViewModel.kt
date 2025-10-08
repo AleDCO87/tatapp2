@@ -3,6 +3,8 @@ package com.example.tatapp.ui.screens.productos
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tatapp.R
+import com.example.tatapp.data.clases.CategoriaProducto
+import com.example.tatapp.data.clases.ClaseProductos
 import com.example.tatapp.data.modelo.dao.CarritoDao
 import com.example.tatapp.data.modelo.entity.CarritoEntity
 import com.example.tatapp.ui.components.drawableMap

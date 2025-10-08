@@ -28,7 +28,8 @@ import com.example.tatapp.ui.screens.formRegistro.FormRegistro
 import com.example.tatapp.ui.screens.home.Home
 import com.example.tatapp.ui.screens.homeProductos.HomeProductosScreen
 import com.example.tatapp.ui.screens.homeProductos.loadProductosFromJson
-import com.example.tatapp.ui.screens.productos.ClaseProductos
+import com.example.tatapp.ui.screens.loggin.LoginScreen
+import com.example.tatapp.data.clases.ClaseProductos
 import com.example.tatapp.ui.screens.productos.ProductosScreen
 import com.example.tatapp.ui.screens.subcategorias.SubCategoriasScreen
 import com.example.tatapp.ui.theme.TatappTheme
@@ -137,6 +138,14 @@ class MainActivity : ComponentActivity() {
                             carritoViewModel = carritoViewModel
                         )
                     }
+
+                    composable("login") {
+                        LoginScreen(navController)
+                    }
+
+                    //composable("registro") {
+                        //RegistroScreen(navController)
+                    //}
 
                     composable("registro") { FormRegistro(navController) }
                 }

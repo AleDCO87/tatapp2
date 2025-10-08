@@ -25,6 +25,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.tatapp.R
+import com.example.tatapp.data.clases.CategoriaProducto
+import com.example.tatapp.data.clases.ClaseProductos
 import com.example.tatapp.data.modelo.dao.CarritoDao
 import com.example.tatapp.data.repositorio.ProductosRepositoryJson
 import com.example.tatapp.ui.components.drawableMap

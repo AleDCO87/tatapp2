@@ -41,8 +41,8 @@ fun BottomHomeBar(
     selectedId: String,
     onItemSelected: (BottomItem) -> Unit,
     modifier: Modifier = Modifier,
-    backgroundColor: Color = MaterialTheme.colorScheme.surface,
-    contentColor: Color = MaterialTheme.colorScheme.onSurface,
+    backgroundColor: Color = MaterialTheme.colorScheme.surfaceVariant,
+    contentColor: Color = MaterialTheme.colorScheme.onSurfaceVariant,
     badgeColor: Color = MaterialTheme.colorScheme.error,
     barHeight: Dp = 137.dp,
     itemWidth: Dp = 68.dp,
@@ -89,7 +89,7 @@ private fun BottomBarItem(
     itemWidth: Dp = 60.dp,
     iconSize: Dp = 30.dp,
     labelFontSize: TextUnit = 16.sp,
-    badgeColor: Color = MaterialTheme.colorScheme.error
+    badgeColor: Color = Color.Red
 ) {
     val effectiveIconSize = item.iconSize ?: iconSize
     val effectiveLabelSize = item.labelFontSize ?: labelFontSize

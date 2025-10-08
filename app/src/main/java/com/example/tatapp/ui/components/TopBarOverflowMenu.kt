@@ -20,7 +20,7 @@ fun TopBarOverflowMenu(
     isDark: Boolean,
     onToggleDark: () -> Unit,
     onOpenPerfil: () -> Unit,
-    onOpenConfig: () -> Unit,
+    //onOpenConfig: () -> Unit,
     closeOnToggle: Boolean = false,
     trigger: @Composable (() -> Unit)? = null
 ) {
@@ -39,9 +39,10 @@ fun TopBarOverflowMenu(
         }
     }
 
-    DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+    DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }, containerColor = MaterialTheme.colorScheme.surface) {
         DropdownMenuItem(text = { Text("Perfil") }, onClick = { expanded = false; onOpenPerfil() })
-        DropdownMenuItem(text = { Text("Configuración") }, onClick = { expanded = false; onOpenConfig() })
+        //DropdownMenuItem(text = { Text("Configuración") }, onClick = { expanded = false; onOpenConfig() })
+
         DropdownMenuItem(
             text = {
                 Row(verticalAlignment = Alignment.CenterVertically) {

@@ -99,6 +99,8 @@ fun CarritoScreen(navController: NavHostController, viewModel: CarritoViewModel)
                 .padding(horizontal = 16.dp, vertical = 12.dp)
                 .fillMaxSize()
         ) {
+
+
             if (carrito.isEmpty()) {
                 Text(
                     "El carrito está vacío",
