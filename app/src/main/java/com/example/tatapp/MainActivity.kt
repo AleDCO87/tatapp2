@@ -128,7 +128,16 @@ class MainActivity : ComponentActivity() {
                         }
                     }
 
-                    composable("home") { Home(navController) }
+                    composable("home") {
+                        val isDark by settingsVm.darkMode.collectAsState()
+                        Home(
+                            navController = navController,
+                            isDark = isDark,
+                            onToggleDark = { settingsVm.toggleDark() },
+                            carritoViewModel = carritoViewModel
+                        )
+                    }
+
                     composable("registro") { FormRegistro(navController) }
                 }
             }
