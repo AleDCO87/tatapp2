@@ -1,6 +1,8 @@
 package com.example.tatapp.ui.screens.subcategorias
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -12,10 +14,17 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.tatapp.data.clases.subcategoriasMap
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -58,29 +67,51 @@ fun SubCategoriasScreen(
                     shape = RoundedCornerShape(20.dp),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(80.dp)
+                        .height(150.dp)
                         .clickable {
-                            // Navegar a ProductosScreen con categoría y subcategoría
-                            navController.navigate("productos/${categoria}/${subcategoria}")
+                            navController.navigate("productos/${categoria}/${subcategoria.nombre}")
                         },
                     elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.surface,
-                        contentColor = MaterialTheme.colorScheme.onSurface
-                    ),
-                    border = BorderStroke(
-                        width = 1.dp,
-                        color = MaterialTheme.colorScheme.primary
-                    )
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.surface)
                 ) {
                     Box(
-                        contentAlignment = Alignment.Center,
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .clip(RoundedCornerShape(20.dp))
                     ) {
+                        // Imagen de fondo
+                        Image(
+                            painter = painterResource(subcategoria.imagenRes),
+                            contentDescription = subcategoria.nombre,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier.fillMaxSize()
+                        )
+
+                        // Degradado para mejorar visibilidad del texto
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(
+                                    Brush.verticalGradient(
+                                        colors = listOf(
+                                            Color.Transparent,
+                                            Color.Black.copy(alpha = 0.6f)
+                                        ),
+                                        startY = 200f
+                                    )
+                                )
+                        )
+
+                        // Texto sobre la imagen
                         Text(
-                            text = subcategoria,
+                            text = subcategoria.nombre,
+                            color = Color.White,
                             fontSize = 22.sp,
-                            fontWeight = FontWeight.Medium
+                            fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier
+                                .align(Alignment.BottomCenter)
+                                .padding(bottom = 16.dp)
                         )
                     }
                 }

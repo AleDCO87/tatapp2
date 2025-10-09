@@ -7,6 +7,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
@@ -20,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -29,6 +31,8 @@ import com.example.tatapp.data.clases.CategoriaProducto
 import com.example.tatapp.data.clases.ClaseProductos
 import com.example.tatapp.data.modelo.dao.CarritoDao
 import com.example.tatapp.data.repositorio.ProductosRepositoryJson
+import com.example.tatapp.ui.components.BottomHomeBar
+import com.example.tatapp.ui.components.BottomItem
 import com.example.tatapp.ui.components.drawableMap
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -66,6 +70,28 @@ fun ProductosScreen(
     val totalEnCarrito = carrito.sumOf { it.cantidad }
     val scope = rememberCoroutineScope()
 
+    val currentRoute = navController.currentBackStackEntryFlow
+        .collectAsState(initial = navController.currentBackStackEntry)
+        .value?.destination?.route ?: "home"
+
+    val items = listOf(
+        BottomItem("homeProductosScreen", R.drawable.home, "Inicio"),
+        BottomItem("home", R.drawable.menu, "Menú"),
+        BottomItem(
+            "carrito",
+            R.drawable.shopping_cart,
+            "Carrito",
+            label = "CARRO",
+            showLabelAlways = true,
+            badgeCount = totalEnCarrito,
+            iconSize = 50.dp,
+            labelFontSize = 16.sp,
+            itemWidth = 84.dp
+        ),
+        BottomItem("login", R.drawable.user, "Perfil"),
+        BottomItem("home", R.drawable.figura, "Icono personalizado")
+    )
+
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
         contentColor = MaterialTheme.colorScheme.onBackground,
@@ -80,13 +106,13 @@ fun ProductosScreen(
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = MaterialTheme.colorScheme.surface,            // Fondo
                     titleContentColor = MaterialTheme.colorScheme.onSurface,       // Texto
-                    navigationIconContentColor = MaterialTheme.colorScheme.primary, // Iconos izq.
-                    actionIconContentColor = MaterialTheme.colorScheme.primary   // Iconos der.
+                    navigationIconContentColor = MaterialTheme.colorScheme.onSurface, // Iconos izq.
+                    actionIconContentColor = MaterialTheme.colorScheme.onSurface   // Iconos der.
                 )
 
             )
         },
-        bottomBar = {
+        /*bottomBar = {
             NavigationBar (
                 containerColor = MaterialTheme.colorScheme.surface,
                 contentColor = MaterialTheme.colorScheme.onSurface
@@ -112,7 +138,30 @@ fun ProductosScreen(
                     onClick = { navController.navigate("carrito") }
                 )
             }
+        }*/
+
+        bottomBar = {
+            BottomHomeBar(
+                items = items,
+                selectedId = currentRoute,
+                onItemSelected = { tapped ->
+                    if (tapped.id != currentRoute) {
+                        navController.navigate(tapped.id) {
+                            launchSingleTop = true
+                            restoreState = true
+                            popUpTo(navController.graph.startDestinationId) { saveState = true }
+                        }
+                    }
+                },
+                //backgroundColor = MaterialTheme.colorScheme.surfaceVariant,
+                //contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                barHeight = 137.dp,
+                itemWidth = 68.dp,
+                iconSize = 40.dp,
+                labelFontSize = 16.sp
+            )
         }
+
     ) { innerPadding ->
         LazyColumn(
             modifier = Modifier
@@ -142,7 +191,7 @@ fun ProductoItemRow(
 ) {
     var cantidad by remember { mutableStateOf(1) }
 
-    // 👇 Convertimos el String (ej: "ej_alim") en Int con drawableMap
+    // Convertimos el String (ej: "ej_alim") en Int con drawableMap
     val drawableId = drawableMap[producto.imagenRes] ?: R.drawable.ej_alim
 
     Card(
@@ -151,12 +200,12 @@ fun ProductoItemRow(
             .height(350.dp),
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface,
+            containerColor = MaterialTheme.colorScheme.background,
             contentColor = MaterialTheme.colorScheme.onSurface
         ),
         border = BorderStroke(
             width = 1.dp,
-            color = MaterialTheme.colorScheme.primary
+            color = MaterialTheme.colorScheme.surface
         )
     ) {
         Column {
@@ -210,12 +259,28 @@ fun ProductoItemRow(
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Button(onClick = { if (cantidad > 1) cantidad-- }, modifier = Modifier.size(50.dp)) {
-                        Text("-", fontSize = 20.sp)
+                    FilledIconButton(
+                        onClick = { if (cantidad > 1) cantidad-- },
+                        modifier = Modifier.size(50.dp)
+                    ) {
+                        Text(
+                            text = "−",
+                            fontSize = 28.sp,
+                            fontWeight = FontWeight.Bold
+                        )
                     }
+
                     Text("$cantidad", fontSize = 30.sp)
-                    Button(onClick = { cantidad++ }, modifier = Modifier.size(50.dp)) {
-                        Text("+", fontSize = 20.sp)
+
+                    FilledIconButton(
+                        onClick = { cantidad++ },
+                        modifier = Modifier.size(50.dp)
+                    ) {
+                        Text(
+                            text = "+",
+                            fontSize = 28.sp,
+                            fontWeight = FontWeight.Bold
+                        )
                     }
                 }
 

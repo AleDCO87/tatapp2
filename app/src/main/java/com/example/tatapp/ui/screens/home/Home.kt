@@ -60,7 +60,7 @@ fun Home(
             labelFontSize = 16.sp,
             itemWidth = 84.dp
         ),
-        BottomItem("home", R.drawable.user, "Perfil", iconSize = 40.dp),
+        BottomItem("login", R.drawable.user, "Perfil", iconSize = 40.dp),
         BottomItem("home", R.drawable.figura, "Icono personalizado", iconSize = 40.dp)
     )
 
@@ -84,7 +84,7 @@ fun Home(
                 onItemSelected = { item ->
                     selectedBottom = item.id
                     when (item.id) {
-                        "home"   -> navController.navigate("home")
+                        "home"   -> navController.navigate("homeProductosScreen")
                         "homeProductosScreen"   -> navController.navigate("homeProductosScreen")
                         "carrito"   -> navController.navigate("carrito")
                         "perfil"-> navController.navigate("perfil")

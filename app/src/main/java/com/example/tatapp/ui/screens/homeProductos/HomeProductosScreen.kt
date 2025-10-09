@@ -81,7 +81,7 @@ fun HomeProductosScreen(
         .value?.destination?.route ?: "home"
 
     val items = listOf(
-        BottomItem("home", R.drawable.home, "Inicio"),
+        BottomItem("homeProductosScreen", R.drawable.home, "Inicio"),
         BottomItem("home", R.drawable.menu, "Menú"),
         BottomItem(
             "carrito",
@@ -94,7 +94,7 @@ fun HomeProductosScreen(
             labelFontSize = 16.sp,
             itemWidth = 84.dp
         ),
-        BottomItem("home", R.drawable.user, "Perfil"),
+        BottomItem("login", R.drawable.user, "Perfil"),
         BottomItem("home", R.drawable.figura, "Icono personalizado")
     )
 
