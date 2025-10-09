@@ -35,19 +35,10 @@ fun FormRegistro(
     val snackbarHostState = remember { SnackbarHostState() }
     val scrollState = rememberScrollState()
 
-    // Mostrar mensajes generales
-    /*LaunchedEffect(vm.mensaje) {
-        vm.mensaje?.let { msg ->
-            snackbarHostState.showSnackbar(msg)
-            vm.mensaje = null
-        }
-    }*/
-
     // Confirmación y navegación
     LaunchedEffect(vm.registroExitoso) {
         if (vm.registroExitoso) {
-            snackbarHostState.showSnackbar("Registro Completado ✅")
-            delay(800)
+            snackbarHostState.showSnackbar("Registro completado ✅")
             navController.navigate("homeProductosScreen") {
                 popUpTo("registro") { inclusive = true }
             }
@@ -63,13 +54,7 @@ fun FormRegistro(
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = "Volver")
                     }
-                },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface,            // Fondo
-                    titleContentColor = MaterialTheme.colorScheme.onSurface,       // Texto
-                    navigationIconContentColor = MaterialTheme.colorScheme.onSurface, // Iconos izq.
-                    actionIconContentColor = MaterialTheme.colorScheme.onSurface   // Iconos der.
-                )
+                }
             )
         },
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
@@ -82,12 +67,7 @@ fun FormRegistro(
                 .verticalScroll(scrollState),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
-            Text(
-                text = "Crear cuenta",
-                style = MaterialTheme.typography.displayMedium
-            )
-
+            Text(text = "Crear cuenta", style = MaterialTheme.typography.displayMedium)
             Spacer(Modifier.height(16.dp))
 
             // Nombre
@@ -98,12 +78,8 @@ fun FormRegistro(
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
                 isError = vm.errorNombre != null,
-                supportingText = {
-                    vm.errorNombre?.let { Text(it, color = MaterialTheme.colorScheme.error) }
-                },
-                keyboardActions = KeyboardActions(
-                    onDone = { focusManager.clearFocus() }
-                ),
+                supportingText = { vm.errorNombre?.let { Text(it, color = MaterialTheme.colorScheme.error) } },
+                keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
                 colors= OutlinedTextFieldDefaults.colors(
                     focusedLabelColor = MaterialTheme.colorScheme.onBackground,
                     unfocusedLabelColor = MaterialTheme.colorScheme.onBackground,
@@ -121,12 +97,8 @@ fun FormRegistro(
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
                 isError = vm.errorApellido != null,
-                supportingText = {
-                    vm.errorApellido?.let { Text(it, color = MaterialTheme.colorScheme.error) }
-                },
-                keyboardActions = KeyboardActions(
-                    onDone = { focusManager.clearFocus() }
-                ),
+                supportingText = { vm.errorApellido?.let { Text(it, color = MaterialTheme.colorScheme.error) } },
+                keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
                 colors= OutlinedTextFieldDefaults.colors(
                     focusedLabelColor = MaterialTheme.colorScheme.onBackground,
                     unfocusedLabelColor = MaterialTheme.colorScheme.onBackground,
@@ -148,21 +120,14 @@ fun FormRegistro(
                         } else {
                             vm.errorRut = "El rut es inválido"
                         }
-                    } else {
-                        vm.errorRut = null
-                    }
+                    } else vm.errorRut = null
                 },
                 label = { Text("RUT (12.345.678-9)") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
                 isError = vm.errorRut != null,
-                supportingText = {
-                    vm.errorRut?.let { Text(it, color = MaterialTheme.colorScheme.error) }
-                },
-                keyboardActions = KeyboardActions(
-                    onDone = { focusManager.clearFocus() }
-                ),
+                supportingText = { vm.errorRut?.let { Text(it, color = MaterialTheme.colorScheme.error) } },
                 colors= OutlinedTextFieldDefaults.colors(
                     focusedLabelColor = MaterialTheme.colorScheme.onBackground,
                     unfocusedLabelColor = MaterialTheme.colorScheme.onBackground,
@@ -181,12 +146,7 @@ fun FormRegistro(
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
                 isError = vm.errorCorreo != null,
-                supportingText = {
-                    vm.errorCorreo?.let { Text(it, color = MaterialTheme.colorScheme.error) }
-                },
-                keyboardActions = KeyboardActions(
-                    onDone = { focusManager.clearFocus() }
-                ),
+                supportingText = { vm.errorCorreo?.let { Text(it, color = MaterialTheme.colorScheme.error) } },
                 colors= OutlinedTextFieldDefaults.colors(
                     focusedLabelColor = MaterialTheme.colorScheme.onBackground,
                     unfocusedLabelColor = MaterialTheme.colorScheme.onBackground,
@@ -205,12 +165,7 @@ fun FormRegistro(
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
                 isError = vm.errorTelefono != null,
-                supportingText = {
-                    vm.errorTelefono?.let { Text(it, color = MaterialTheme.colorScheme.error) }
-                },
-                keyboardActions = KeyboardActions(
-                    onDone = { focusManager.clearFocus() }
-                ),
+                supportingText = { vm.errorTelefono?.let { Text(it, color = MaterialTheme.colorScheme.error) } },
                 colors= OutlinedTextFieldDefaults.colors(
                     focusedLabelColor = MaterialTheme.colorScheme.onBackground,
                     unfocusedLabelColor = MaterialTheme.colorScheme.onBackground,
@@ -223,17 +178,12 @@ fun FormRegistro(
             // Contraseña
             PasswordField(
                 value = vm.regPassword,
-                onValueChange = {
-                    vm.regPassword = it
-                    vm.errorPassword = null
-                },
+                onValueChange = { vm.regPassword = it; vm.errorPassword = null },
                 errorText = vm.errorPassword,
                 confirmValue = vm.regConfirmarPassword,
                 minLength = 6,
                 modifier = Modifier.fillMaxWidth(),
-                label = "Contraseña",
-
-
+                label = "Contraseña"
             )
 
             Spacer(Modifier.height(8.dp))
@@ -246,35 +196,40 @@ fun FormRegistro(
                 label = { Text("Confirmar contraseña") },
                 visualTransformation = if (confirmReveal) VisualTransformation.None else PasswordVisualTransformation(),
                 modifier = Modifier.fillMaxWidth(),
-                colors= OutlinedTextFieldDefaults.colors(
-                    focusedLabelColor = MaterialTheme.colorScheme.onBackground,
-                    unfocusedLabelColor = MaterialTheme.colorScheme.onBackground,
-                    errorLabelColor = MaterialTheme.colorScheme.error,
-                ),
                 singleLine = true,
                 isError = vm.errorConfirmPassword != null,
-                supportingText = {
-                    vm.errorConfirmPassword?.let { Text(it, color = MaterialTheme.colorScheme.error) }
-                },
+                supportingText = { vm.errorConfirmPassword?.let { Text(it, color = MaterialTheme.colorScheme.error) } },
                 trailingIcon = {
                     TextButton(onClick = { confirmReveal = !confirmReveal }) {
                         Text(if (confirmReveal) "Ocultar" else "Mostrar")
                     }
-                }
+                },
+                colors= OutlinedTextFieldDefaults.colors(
+                    focusedLabelColor = MaterialTheme.colorScheme.onBackground,
+                    unfocusedLabelColor = MaterialTheme.colorScheme.onBackground,
+                    errorLabelColor = MaterialTheme.colorScheme.error,
+                )
             )
 
             Spacer(Modifier.height(16.dp))
 
-            // Botón Registrar
             Button(
-                onClick = { vm.validarFormulario() },
-                modifier = Modifier.fillMaxWidth()
+                onClick = { vm.registrarUsuario() },
+                modifier = Modifier.fillMaxWidth(),
+                enabled = !vm.isLoading
             ) {
-                Text("Registrarse")
+                if (vm.isLoading) {
+                    CircularProgressIndicator(
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        strokeWidth = 2.dp,
+                        modifier = Modifier.size(24.dp)
+                    )
+                } else {
+                    Text("Registrarse")
+                }
             }
 
             Spacer(Modifier.height(8.dp))
-
             TextButton(onClick = { navController.popBackStack() }) {
                 Text("Cancelar")
             }

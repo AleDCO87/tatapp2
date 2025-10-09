@@ -1,15 +1,16 @@
 package com.example.tatapp.ui.screens.loggin
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-//import com.google.firebase.auth.FirebaseAuth
+import com.example.tatapp.data.repositorio.AuthRepository
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.delay
 
-class LoginViewModel : ViewModel() {
+class LoginViewModel(
+    private val authRepo: AuthRepository = AuthRepository()
+) : ViewModel() {
 
     var email by mutableStateOf("")
     var emailError by mutableStateOf<String?>(null)
@@ -20,7 +21,8 @@ class LoginViewModel : ViewModel() {
     var isLoading by mutableStateOf(false)
     var success by mutableStateOf(false)
 
-    //private val firebaseAuth = FirebaseAuth.getInstance()
+    // Nuevo: para almacenar el displayName del usuario
+    var displayName by mutableStateOf<String?>(null)
 
     fun onEmailChange(value: String) {
         email = value
@@ -34,38 +36,52 @@ class LoginViewModel : ViewModel() {
 
     fun resetSuccess() {
         success = false
+        displayName = null
+    }
+
+    private fun validarCampos(): Boolean {
+        var valido = true
+        emailError = null
+        passwordError = null
+
+        if (email.isBlank()) {
+            emailError = "El correo es obligatorio"
+            valido = false
+        } else if (!email.contains("@")) {
+            emailError = "Correo inválido"
+            valido = false
+        }
+
+        if (password.isBlank()) {
+            passwordError = "La contraseña es obligatoria"
+            valido = false
+        }
+
+        return valido
     }
 
     fun login() {
-        // Validación simple
-        if (email.isBlank()) {
-            emailError = "El correo es obligatorio"
-            return
-        }
-        if (!email.contains("@")) {
-            emailError = "Correo inválido"
-            return
-        }
-        if (password.isBlank()) {
-            passwordError = "La contraseña es obligatoria"
-            return
-        }
+        if (!validarCampos()) return
 
         isLoading = true
         viewModelScope.launch {
             try {
-                // Simulación de login
-                delay(1200)
-
-                // Login con Firebase (descomentar cuando quieras usarlo)
-                // firebaseAuth.signInWithEmailAndPassword(email, password).await()
-
-                isLoading = false
+                val user = authRepo.login(email, password)
+                displayName = user?.displayName
                 success = true
             } catch (e: Exception) {
+                when (e) {
+                    is FirebaseAuthInvalidUserException -> emailError = "Usuario no registrado"
+                    is FirebaseAuthInvalidCredentialsException -> passwordError = "Contraseña incorrecta"
+                    else -> passwordError = e.message
+                }
+            } finally {
                 isLoading = false
-                passwordError = e.message
             }
         }
+    }
+
+    fun logout() {
+        authRepo.logout()
     }
 }

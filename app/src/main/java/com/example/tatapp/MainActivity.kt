@@ -35,6 +35,7 @@ import com.example.tatapp.ui.screens.subcategorias.SubCategoriasScreen
 import com.example.tatapp.ui.theme.TatappTheme
 import com.example.tatapp.viewmodel.SettingsViewModel
 import com.example.tatapp.viewmodel.SettingsViewModelFactory
+import com.google.firebase.FirebaseApp
 
 class MainActivity : ComponentActivity() {
 
@@ -44,6 +45,7 @@ class MainActivity : ComponentActivity() {
         val splashScreen = installSplashScreen()
         splashScreen.setKeepOnScreenCondition { false }
         super.onCreate(savedInstanceState)
+        FirebaseApp.initializeApp(this)
         enableEdgeToEdge()
 
         // Crear DB y ViewModel con Factory

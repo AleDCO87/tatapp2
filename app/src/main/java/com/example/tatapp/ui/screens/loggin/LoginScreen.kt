@@ -17,6 +17,9 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.tatapp.R
+import com.example.tatapp.data.repositorio.AuthRepository
+import com.example.tatapp.ui.screens.datosUsuario.DatosUsuarioScreen
+import com.google.firebase.auth.FirebaseAuth
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -24,6 +27,23 @@ fun LoginScreen(
     navController: NavController,
     viewModel: LoginViewModel = viewModel()
 ) {
+    val authRepo = remember { AuthRepository() }
+    val currentUser = authRepo.currentUser()
+
+    // Si hay un usuario logueado, mostrar pantalla de bienvenida
+    if (currentUser != null) {
+        DatosUsuarioScreen(
+            displayName = currentUser.displayName ?: "Usuario",
+            onLogout = {
+                viewModel.logout()
+                navController.navigate("login") {
+                    popUpTo("homeProductosScreen") { inclusive = true }
+                }
+            }
+        )
+        return
+    }
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background,

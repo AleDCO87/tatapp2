@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "993267614583",
+    "project_id": "tatappuchile",
+    "storage_bucket": "tatappuchile.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:993267614583:android:544d3518ae40e4f7795772",
+        "android_client_info": {
+          "package_name": "com.example.tatapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBuKB2wpTgfmZO840865Tz7IitxDdvxK4U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
