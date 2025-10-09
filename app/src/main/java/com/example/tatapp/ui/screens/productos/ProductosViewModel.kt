@@ -25,7 +25,7 @@ class ProductosViewModel(
 
     fun agregarAlCarrito(producto: ClaseProductos, cantidad: Int = 1) {
         viewModelScope.launch {
-            val drawableId = drawableMap[producto.imagenRes] ?: R.drawable.ej_alim
+            val drawableId = R.drawable.ej_alim
 
             val existente = carritoDao.getById(producto.id)
             if (existente != null) {
