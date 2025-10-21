@@ -3,7 +3,7 @@ package com.example.tatapp.ui.screens.loggin
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.tatapp.data.repositorio.AuthRepository
+import com.example.tatapp.data.repository.AuthRepository
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import kotlinx.coroutines.launch

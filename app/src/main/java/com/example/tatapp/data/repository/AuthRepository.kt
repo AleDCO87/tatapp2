@@ -1,4 +1,4 @@
-package com.example.tatapp.data.repositorio
+package com.example.tatapp.data.repository
 
 import com.google.firebase.auth.*
 import kotlinx.coroutines.tasks.await

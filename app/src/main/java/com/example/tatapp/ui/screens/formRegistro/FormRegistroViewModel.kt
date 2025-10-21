@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.tatapp.data.repositorio.AuthRepository
+import com.example.tatapp.data.repository.AuthRepository
 import com.example.tatapp.ui.components.esRutValidoConFuncion
 import com.example.tatapp.ui.components.formatearRUT
 import kotlinx.coroutines.launch

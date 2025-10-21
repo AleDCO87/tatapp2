@@ -1,294 +1,231 @@
 package com.example.tatapp.ui.screens.homeProductos
 
-import android.content.Context
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.*
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.tatapp.R
-import com.example.tatapp.ui.components.TopBarOverflowMenu
-import com.example.tatapp.ui.screens.carrito.CarritoViewModel
-import com.example.tatapp.data.clases.ClaseProductos
-import com.example.tatapp.ui.components.drawableMap
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import kotlinx.serialization.json.Json
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
-import com.example.tatapp.data.clases.categoriasProductos
-import com.example.tatapp.data.clases.categoriasServicios
+import com.example.tatapp.core.ui.UiState
+import com.example.tatapp.data.remote.NetworkModule
+import com.example.tatapp.data.remote.services.CatalogService
+import com.example.tatapp.data.repository.CatalogRepository
+import com.example.tatapp.domain.model.Product
 import com.example.tatapp.ui.components.BottomHomeBar
 import com.example.tatapp.ui.components.BottomItem
-import com.example.tatapp.ui.components.CarruselCategorias
 import com.example.tatapp.ui.components.SearchTopBar
+import com.example.tatapp.ui.screens.carrito.CarritoViewModel
 import com.example.tatapp.viewmodel.SettingsViewModel
+import kotlinx.coroutines.flow.collectLatest
+import retrofit2.Retrofit
 
-
-// --- Función para cargar JSON desde assets ---
-suspend fun loadProductosFromJson(context: Context): List<ClaseProductos> {
-    return withContext(Dispatchers.IO) {
-        val jsonString = context.assets.open("productos.json")
-            .bufferedReader()
-            .use { it.readText() }
-        Json.decodeFromString(jsonString)
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeProductosScreen(
     navController: NavHostController,
-    carritoViewModel: CarritoViewModel,
     settingsVm: SettingsViewModel,
-    context: Context = LocalContext.current
+    carritoViewModel: CarritoViewModel
 ) {
+    // --------- Tema claro/oscuro ----------
     val isDark by settingsVm.darkMode.collectAsState()
-    var searchQuery by remember { mutableStateOf("") }
 
-    var productosJson by remember { mutableStateOf<List<ClaseProductos>>(emptyList()) }
-    // Cargar productos desde JSON una sola vez
-    LaunchedEffect(Unit) {
-        productosJson = loadProductosFromJson(context)
+    // --------- Estado buscador ----------
+    var query by remember { mutableStateOf("") }
+
+    // --------- Badge carrito (usa siempre initial) ----------
+    val cartBadge by carritoViewModel.totalEnCarrito.collectAsState(initial = 0)
+
+    // --------- Network / VM (tipo explícito para evitar el error del delegate) ----------
+    val retrofit: Retrofit by remember {
+        mutableStateOf(
+            NetworkModule.retrofit(
+                NetworkModule.okHttp { /* token si aplica */ null }
+            )
+        )
     }
-
-    val carrito by carritoViewModel.carrito.collectAsState()
-    val totalEnCarrito = carrito.sumOf { it.cantidad }
-
-    val currentRoute = navController.currentBackStackEntryFlow
-        .collectAsState(initial = navController.currentBackStackEntry)
-        .value?.destination?.route ?: "home"
-
-    val items = listOf(
-        BottomItem("homeProductosScreen", R.drawable.home, "Inicio"),
-        BottomItem("home", R.drawable.menu, "Menú"),
-        BottomItem(
-            "carrito",
-            R.drawable.shopping_cart,
-            "Carrito",
-            label = "CARRO",
-            showLabelAlways = true,
-            badgeCount = totalEnCarrito,
-            iconSize = 50.dp,
-            labelFontSize = 16.sp,
-            itemWidth = 84.dp
-        ),
-        BottomItem("login", R.drawable.user, "Perfil"),
-        BottomItem("home", R.drawable.figura, "Icono personalizado")
+    val catalogService: CatalogService = remember { retrofit.create(CatalogService::class.java) }
+    val catalogRepo = remember { CatalogRepository(catalogService) }
+    val catalogVm: CatalogNetworkViewModel = viewModel(
+        factory = CatalogNetworkVMFactory(catalogRepo)
     )
 
-    val todasCategorias = categoriasProductos + categoriasServicios
+    val state by catalogVm.state.collectAsState()
+
+    // Carga catálogo una sola vez
+    LaunchedEffect(Unit) { catalogVm.loadCatalog() }
+
+    // --------- Bottom bar items ----------
+    val bottomItems: List<BottomItem> = remember {
+        listOf(
+            BottomItem("home",    R.drawable.home,    "Inicio",  "Inicio"),
+            BottomItem("cart",    R.drawable.carrito, "Carro",   "Carro"),
+            BottomItem("profile", R.drawable.perfil,  "Perfil",  "Perfil"),
+            BottomItem("more",    R.drawable.figura,  "Más",     "Más")
+        )
+    }
+    var selectedBottom by remember { mutableStateOf("home") }
 
     Scaffold(
-        //containerColor = MaterialTheme.colorScheme.background,
-        //contentColor = MaterialTheme.colorScheme.onBackground,
         topBar = {
             SearchTopBar(
-                query = searchQuery,
-                onQueryChange = { searchQuery = it },
-                onSearch = { q ->
-                    // TODO: navega o filtra productos con "q"
-                    // navController.navigate("buscar?query=${Uri.encode(q)}")
-                },
-                onVoiceClick = {
-                    // TODO: integra reconocimiento de voz cuando quieras
-                },
+                query = query,
+                onQueryChange = { query = it },
+                onSearch = { /* TODO: conectar a búsqueda si aplica */ },
+                onVoiceClick = { /* TODO */ },
                 isDark = isDark,
                 onToggleDark = { settingsVm.toggleDark() },
-                onOpenPerfil = { navController.navigate("login") },
+                onOpenPerfil = { navController.navigate("perfil") },
                 onOpenConfig = { navController.navigate("config") }
             )
         },
         bottomBar = {
             BottomHomeBar(
-                items = items,
-                selectedId = currentRoute,
-                onItemSelected = { tapped ->
-                    if (tapped.id != currentRoute) {
-                        navController.navigate(tapped.id) {
-                            launchSingleTop = true
-                            restoreState = true
-                            popUpTo(navController.graph.startDestinationId) { saveState = true }
-                        }
+                items = bottomItems.map { item ->
+                    if (item.id == "cart") item.copy(badgeCount = cartBadge) else item
+                },
+                selectedId = selectedBottom,
+                onItemSelected = { item ->
+                    selectedBottom = item.id
+                    when (item.id) {
+                        "home"    -> navController.navigate("homeProductosScreen") { launchSingleTop = true }
+                        "cart"    -> navController.navigate("carrito")
+                        "profile" -> navController.navigate("perfil")
+                        "more"    -> navController.navigate("config")
                     }
                 },
-                //backgroundColor = MaterialTheme.colorScheme.surfaceVariant,
-                //contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                barHeight = 137.dp,
-                itemWidth = 68.dp,
-                iconSize = 40.dp,
-                labelFontSize = 16.sp
+                backgroundColor = MaterialTheme.colorScheme.background,
+                contentColor = MaterialTheme.colorScheme.onBackground
             )
         }
-
-    ) { paddingValues ->
-
-        LazyColumn(
+    ) { inner ->
+        Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
-                .padding(paddingValues),
-            contentPadding = PaddingValues(vertical = 16.dp)
+                .padding(inner)
         ) {
-
-            item {
-                CarruselCategorias(
-                    categorias = categoriasProductos + categoriasServicios,
-                    onCategoriaClick = { categoria ->
-                        navController.navigate("subcategorias/${categoria.nombreCat}")
-                    }
-                )
-            }
-
-            item {
+            // --------------------- Título / encabezado de sección ---------------------
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Text(
-                    text = "¿Qué necesitas hoy?",
-                    fontSize = 22.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onBackground,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    textAlign = TextAlign.Center
+                    text = "Catálogo",
+                    style = MaterialTheme.typography.titleMedium
                 )
             }
 
-            todasCategorias.forEach { categoria ->
-                item {
-                    val productosFiltrados = productosJson
-                        .filter { it.categoria.name == categoria.nombreCat || it.categoria.displayName == categoria.nombreCat }
-                        .sortedByDescending { it.evaluacion }
-                        .take(5)
+            // --------------------- Secciones (carruseles por categorías) ---------------------
+            when (val s = state) {
+                is UiState.Idle, UiState.Loading -> CenterLoader()
+                is UiState.Error -> ErrorWithRetry(message = s.message) { catalogVm.loadCatalog() }
+                is UiState.Success -> {
+                    val productos = s.data
 
-                    CategoriaSection(
-                        nombreCategoria = categoria.nombreCat,
-                        productos = productosFiltrados,
-                        onVerTodoClick = { navController.navigate("subcategorias/${categoria.nombreCat}") },
-                        navController = navController
+                    SectionCarousel(
+                        title = "Recomendados",
+                        products = productos,
+                        onProductClick = { p -> navController.navigate("detalle/${p.id}") },
+                        onAddToCart = { _ -> /* TODO: integrar acción de carrito si quieres */ }
                     )
+
+                    Spacer(Modifier.height(8.dp))
+
+                    SectionCarousel(
+                        title = "Populares",
+                        products = productos,
+                        onProductClick = { p -> navController.navigate("detalle/${p.id}") },
+                        onAddToCart = { _ -> /* TODO */ }
+                    )
+
+                    Spacer(Modifier.height(12.dp))
                 }
             }
         }
     }
 }
 
+/* =================== Sección reutilizable (carrusel horizontal) =================== */
+
 @Composable
-fun CategoriaSection(
-    nombreCategoria: String,
-    productos: List<ClaseProductos>,
-    onVerTodoClick: () -> Unit,
-    navController: NavHostController
+private fun SectionCarousel(
+    title: String,
+    products: List<Product>,
+    onProductClick: (Product) -> Unit,
+    onAddToCart: (Product) -> Unit
 ) {
-    val cs = MaterialTheme.colorScheme
-    Column(modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp)) {
+    if (products.isEmpty()) return
+
+    Column(Modifier.fillMaxWidth()) {
         Row(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = nombreCategoria,
-                fontSize = 26.sp,
-                fontWeight = FontWeight.Bold,
-                color = cs.onBackground
-            )
-            Button(
-                onClick = onVerTodoClick,
-                shape = RoundedCornerShape(12.dp),
-                contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.onPrimary     )
-            ) {
-                Text(text = "Ver todo", fontSize = 18.sp)
-            }
+            Text(title, style = MaterialTheme.typography.titleSmall)
         }
 
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(Modifier.height(6.dp))
 
         LazyRow(
             contentPadding = PaddingValues(horizontal = 16.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            items(productos) { producto ->
-                ProductoCard(
-                    producto = producto,
-                    onClick = {
-                        navController.navigate("detalle/${producto.id}")
-
-                    }
+            items(products, key = { it.id }) { p ->
+                ProductCardNeutral(
+                    product = p,
+                    onClick = { onProductClick(p) },
+                    onAddToCart = { onAddToCart(p) }
                 )
             }
         }
     }
 }
 
-@Composable
-fun ProductoCard(
-    producto: ClaseProductos,
-    onClick: () -> Unit
-) {
-    Card(
-        shape = RoundedCornerShape(20.dp),
-        modifier = Modifier
-            .size(width = 160.dp, height = 200.dp)
-            .clickable { onClick() },
-        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.background,
-            contentColor = MaterialTheme.colorScheme.onSurface
-        ),
-        border = BorderStroke(
-            width = 1.dp,
-            color = MaterialTheme.colorScheme.surface
-        )
+/* =================== Card neutral mínima (sustituible por la tuya) =================== */
 
+@Composable
+private fun ProductCardNeutral(
+    product: Product,
+    onClick: () -> Unit,
+    onAddToCart: () -> Unit
+) {
+    ElevatedCard(
+        modifier = Modifier
+            .width(220.dp)
+            .heightIn(min = 120.dp),
+        onClick = onClick
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize(),
-                //.background(Color.White),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Top
-        ) {
-            val drawableId = drawableMap[producto.imagenRes] ?: R.drawable.ej_alim
-            Image(
-                painter = painterResource(id = drawableId),
-                contentDescription = producto.nombre,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .height(140.dp)
-                    .fillMaxWidth()
-            )
-            Spacer(modifier = Modifier.height(12.dp))
-            Text(
-                text = producto.nombre,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Medium,
-                modifier = Modifier.padding(horizontal = 8.dp),
-                textAlign = TextAlign.Center
-            )
+        Column(Modifier.padding(12.dp)) {
+            Text(product.name, style = MaterialTheme.typography.titleSmall, maxLines = 2)
+            Spacer(Modifier.height(4.dp))
+            Text("$${"%.0f".format(product.price)}", style = MaterialTheme.typography.bodyMedium)
+            Spacer(Modifier.height(8.dp))
+            Button(onClick = onAddToCart) { Text("Agregar") }
+        }
+    }
+}
+
+/* =================== Helpers neutrales =================== */
+
+@Composable private fun CenterLoader() {
+    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        CircularProgressIndicator()
+    }
+}
+
+@Composable private fun ErrorWithRetry(message: String, onRetry: () -> Unit) {
+    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(message)
+            Spacer(Modifier.height(8.dp))
+            Button(onClick = onRetry) { Text("Reintentar") }
         }
     }
 }

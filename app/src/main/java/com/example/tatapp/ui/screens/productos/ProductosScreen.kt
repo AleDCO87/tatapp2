@@ -7,13 +7,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
-import androidx.compose.material.icons.rounded.Menu
-import androidx.compose.material.icons.rounded.ShoppingCart
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,7 +27,7 @@ import com.example.tatapp.R
 import com.example.tatapp.data.clases.CategoriaProducto
 import com.example.tatapp.data.clases.ClaseProductos
 import com.example.tatapp.data.modelo.dao.CarritoDao
-import com.example.tatapp.data.repositorio.ProductosRepositoryJson
+import com.example.tatapp.data.repository.ProductosRepositoryJson
 import com.example.tatapp.ui.components.BottomHomeBar
 import com.example.tatapp.ui.components.BottomItem
 import com.example.tatapp.ui.components.drawableMap

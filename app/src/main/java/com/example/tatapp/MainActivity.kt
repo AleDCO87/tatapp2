@@ -4,76 +4,77 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.*
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.ViewModelProvider
-import androidx.room.Room
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import androidx.room.Room
 import com.example.tatapp.data.modelo.database.AppDatabase
+import com.example.tatapp.data.remote.NetworkModule
+import com.example.tatapp.data.remote.services.CatalogService
+import com.example.tatapp.data.remote.services.CartService
+import com.example.tatapp.data.repository.CatalogRepository
+import com.example.tatapp.data.repository.CartRepository
 import com.example.tatapp.ui.screens.carrito.CarritoScreen
 import com.example.tatapp.ui.screens.carrito.CarritoViewModel
 import com.example.tatapp.ui.screens.carrito.CarritoViewModelFactory
-import com.example.tatapp.ui.screens.detalleProducto.DetalleProductoScreen
+import com.example.tatapp.ui.screens.detalleProducto.DetalleProductoNetworkScreen
+import com.example.tatapp.ui.screens.detalleProducto.DetalleNetworkViewModel
 import com.example.tatapp.ui.screens.formRegistro.FormRegistro
 import com.example.tatapp.ui.screens.home.Home
 import com.example.tatapp.ui.screens.homeProductos.HomeProductosScreen
-import com.example.tatapp.ui.screens.homeProductos.loadProductosFromJson
-import com.example.tatapp.ui.screens.loggin.LoginScreen
-import com.example.tatapp.data.clases.ClaseProductos
 import com.example.tatapp.ui.screens.productos.ProductosScreen
 import com.example.tatapp.ui.screens.subcategorias.SubCategoriasScreen
 import com.example.tatapp.ui.theme.TatappTheme
 import com.example.tatapp.viewmodel.SettingsViewModel
 import com.example.tatapp.viewmodel.SettingsViewModelFactory
-import com.google.firebase.FirebaseApp
+import retrofit2.create
 
 class MainActivity : ComponentActivity() {
 
     private lateinit var carritoViewModel: CarritoViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        val splashScreen = installSplashScreen()
-        splashScreen.setKeepOnScreenCondition { false }
+        val splash = installSplashScreen()
+        splash.setKeepOnScreenCondition { false }
         super.onCreate(savedInstanceState)
-        FirebaseApp.initializeApp(this)
         enableEdgeToEdge()
 
-        // Crear DB y ViewModel con Factory
         val db = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "app_db").build()
         val carritoFactory = CarritoViewModelFactory(db.carritoDao())
         carritoViewModel = ViewModelProvider(this, carritoFactory)[CarritoViewModel::class.java]
 
         setContent {
             val settingsVm: SettingsViewModel =
-                androidx.lifecycle.viewmodel.compose.viewModel(
-                    factory = SettingsViewModelFactory(application)
-                )
-
+                androidx.lifecycle.viewmodel.compose.viewModel(factory = SettingsViewModelFactory(application))
             val isDark by settingsVm.darkMode.collectAsState()
+
+            // Retrofit base
+            val client = remember { NetworkModule.okHttp { null } }
+            val retrofit = remember { NetworkModule.retrofit(client) }
+            val catalogRepo = remember { CatalogRepository(retrofit.create<CatalogService>()) }
+            val cartRepo = remember { CartRepository(retrofit.create<CartService>()) }
+
+            // Detalle VM simple (si prefieres Factory, lo cambiamos luego)
+            val detalleVm = remember { com.example.tatapp.ui.screens.detalleProducto.DetalleNetworkViewModel(catalogRepo) }
 
             TatappTheme(darkTheme = isDark, dynamicColor = false) {
                 val navController = rememberNavController()
-                val context = LocalContext.current
 
-                // Estado para almacenar todos los productos cargados desde JSON
-                var productosJson by remember { mutableStateOf<List<ClaseProductos>>(emptyList()) }
-
-                // Cargar productos desde JSON solo una vez
-                LaunchedEffect(Unit) {
-                    productosJson = loadProductosFromJson(context)
-                }
-
-                NavHost(navController = navController, startDestination = "homeProductosScreen") {
+                NavHost(navController, startDestination = "homeProductosScreen") {
 
                     composable("homeProductosScreen") {
                         HomeProductosScreen(
@@ -86,9 +87,9 @@ class MainActivity : ComponentActivity() {
                     composable(
                         "subcategorias/{categoria}",
                         arguments = listOf(navArgument("categoria") { type = NavType.StringType })
-                    ) { backStackEntry ->
-                        val categoria = backStackEntry.arguments?.getString("categoria") ?: ""
-                        SubCategoriasScreen(navController = navController, categoria = categoria)
+                    ) { backStack ->
+                        val categoria = backStack.arguments?.getString("categoria") ?: ""
+                        SubCategoriasScreen(navController, categoria)
                     }
 
                     composable(
@@ -97,57 +98,45 @@ class MainActivity : ComponentActivity() {
                             navArgument("categoria") { type = NavType.StringType },
                             navArgument("subcategoria") { type = NavType.StringType }
                         )
-                    ) { backStackEntry ->
-                        val categoria = backStackEntry.arguments?.getString("categoria") ?: ""
-                        val subcategoria = backStackEntry.arguments?.getString("subcategoria") ?: ""
-                        ProductosScreen(
-                            navController = navController,
-                            carritoDao = db.carritoDao(),
-                            categoria = categoria,
-                            subcategoria = subcategoria
-                        )
+                    ) { backStack ->
+                        val categoria = backStack.arguments?.getString("categoria") ?: ""
+                        val subcategoria = backStack.arguments?.getString("subcategoria") ?: ""
+                        ProductosScreen(navController, db.carritoDao(), categoria, subcategoria)
                     }
 
                     composable("carrito") {
-                        CarritoScreen(navController = navController, viewModel = carritoViewModel)
+                        CarritoScreen(navController, carritoViewModel)
                     }
 
                     composable(
                         "detalle/{productoId}",
                         arguments = listOf(navArgument("productoId") { type = NavType.StringType })
-                    ) { backStackEntry ->
-                        val productoId = backStackEntry.arguments?.getString("productoId") ?: ""
-                        val producto = productosJson.find { it.id == productoId }
-
-                        if (producto != null) {
-                            DetalleProductoScreen(
-                                navController = navController,
-                                carritoViewModel = carritoViewModel,
-                                producto = producto
-                            )
-                        } else {
-                            // Opcional: pantalla de error o mensaje de producto no encontrado
-                            // Puedes reemplazar con un Composable específico
+                    ) { backStack ->
+                        val id = backStack.arguments?.getString("productoId") ?: return@composable
+                        DetalleProductoNetworkScreen(
+                            navController = navController,
+                            vm = detalleVm,
+                            productoId = id
+                        ) { p, onAdd ->
+                            // UI simple; puedes sustituir por tu DetalleProductoScreen custom
+                            Column(Modifier.padding(16.dp)) {
+                                Text(p.name, style = MaterialTheme.typography.titleLarge)
+                                Text("$${"%.0f".format(p.price)}", style = MaterialTheme.typography.titleMedium)
+                                Spacer(Modifier.height(12.dp))
+                                Button(onClick = onAdd) { Text("Agregar al carrito") }
+                            }
                         }
                     }
 
                     composable("home") {
-                        val isDark by settingsVm.darkMode.collectAsState()
+                        val dark by settingsVm.darkMode.collectAsState()
                         Home(
                             navController = navController,
-                            isDark = isDark,
+                            isDark = dark,
                             onToggleDark = { settingsVm.toggleDark() },
                             carritoViewModel = carritoViewModel
                         )
                     }
-
-                    composable("login") {
-                        LoginScreen(navController)
-                    }
-
-                    //composable("registro") {
-                        //RegistroScreen(navController)
-                    //}
 
                     composable("registro") { FormRegistro(navController) }
                 }

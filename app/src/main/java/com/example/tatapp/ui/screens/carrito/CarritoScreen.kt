@@ -36,7 +36,7 @@ fun CarritoScreen(navController: NavHostController, viewModel: CarritoViewModel)
     val totalEnCarrito by remember(carrito) { derivedStateOf { carrito.sumOf { it.cantidad } } }
 
     val subtotal: Long = carrito.sumOf { it.precio * it.cantidad }.toLong()
-    val total: Long = viewModel.totalPrecio.toLong()
+    val total: Long = viewModel.totalPrecio.value.toLong()
 
     val items = listOf(
         BottomItem("home", com.example.tatapp.R.drawable.home, "Inicio"),
@@ -125,22 +125,6 @@ fun CarritoScreen(navController: NavHostController, viewModel: CarritoViewModel)
                     onPagar = { /* TODO: flujo de pago */ },
                     onVaciar = { viewModel.vaciarCarrito() }
                 )
-
-                /*Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(
-                        "Total: \$${NumberFormat.getNumberInstance(Locale.forLanguageTag("es-CL")).format(viewModel.totalPrecio)}",
-                        fontSize = 22.sp,
-                        modifier = Modifier.weight(1f)
-                    )
-                    Button(
-                        onClick = { /* Acción para pagar */ },
-                        modifier = Modifier.weight(1f).height(50.dp)
-                    ) { Text("Pagar", fontSize = 20.sp) }
-                }*/
             }
         }
     }

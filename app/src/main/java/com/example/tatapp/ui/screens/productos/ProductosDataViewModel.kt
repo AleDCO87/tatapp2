@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tatapp.data.clases.CategoriaProducto
 import com.example.tatapp.data.clases.ClaseProductos
-import com.example.tatapp.data.repositorio.ProductosRepository
+import com.example.tatapp.data.repository.ProductosRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch

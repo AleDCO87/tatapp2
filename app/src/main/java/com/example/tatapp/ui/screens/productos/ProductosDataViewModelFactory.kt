@@ -2,7 +2,7 @@ package com.example.tatapp.ui.screens.productos
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.tatapp.data.repositorio.ProductosRepository
+import com.example.tatapp.data.repository.ProductosRepository
 
 class ProductosDataViewModelFactory(
     private val repository: ProductosRepository
