@@ -76,6 +76,9 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
     implementation("com.squareup.retrofit2:converter-moshi:2.9.0")
     implementation("com.squareup.moshi:moshi-kotlin:1.15.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
+    implementation("com.squareup.retrofit2:converter-scalars:2.11.0")
+    implementation("com.google.code.gson:gson:2.11.0")
 
     // Compose (Usando el BOM)
     implementation(platform("androidx.compose:compose-bom:$compose_bom_version"))

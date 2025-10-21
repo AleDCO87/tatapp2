@@ -62,8 +62,9 @@ fun HomeProductosScreen(
     val bottomItems: List<BottomItem> = remember {
         listOf(
             BottomItem("home",    R.drawable.home,    "Inicio",  "Inicio"),
-            BottomItem("cart",    R.drawable.carrito, "Carro",   "Carro"),
-            BottomItem("profile", R.drawable.perfil,  "Perfil",  "Perfil"),
+            BottomItem("menu",    R.drawable.menu,    "Menú",  "Menú"),
+            BottomItem("carrito",    R.drawable.shopping_cart, "Carro",   "Carro"),
+            BottomItem("profile", R.drawable.user,  "Perfil",  "Perfil"),
             BottomItem("more",    R.drawable.figura,  "Más",     "Más")
         )
     }
@@ -85,16 +86,17 @@ fun HomeProductosScreen(
         bottomBar = {
             BottomHomeBar(
                 items = bottomItems.map { item ->
-                    if (item.id == "cart") item.copy(badgeCount = cartBadge) else item
+                    if (item.id == "carrito") item.copy(badgeCount = cartBadge) else item
                 },
                 selectedId = selectedBottom,
                 onItemSelected = { item ->
                     selectedBottom = item.id
                     when (item.id) {
                         "home"    -> navController.navigate("homeProductosScreen") { launchSingleTop = true }
-                        "cart"    -> navController.navigate("carrito")
-                        "profile" -> navController.navigate("perfil")
-                        "more"    -> navController.navigate("config")
+                        "menu"    -> navController.navigate("menu")
+                        "carrito"    -> navController.navigate("carrito")
+                        "perfil" -> navController.navigate("perfil")
+                        "config"    -> navController.navigate("config")
                     }
                 },
                 backgroundColor = MaterialTheme.colorScheme.background,
