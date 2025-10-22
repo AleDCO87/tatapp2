@@ -7,6 +7,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -19,10 +20,10 @@ import com.example.tatapp.domain.model.Product
 import com.example.tatapp.ui.components.BottomHomeBar
 import com.example.tatapp.ui.components.BottomItem
 import com.example.tatapp.ui.components.SearchTopBar
+import com.example.tatapp.ui.components.CarruselCategorias
 import com.example.tatapp.ui.screens.carrito.CarritoViewModel
 import com.example.tatapp.viewmodel.SettingsViewModel
-import kotlinx.coroutines.flow.collectLatest
-import retrofit2.Retrofit
+import com.example.tatapp.data.clases.CategoriaItem
 
 @Composable
 fun HomeProductosScreen(
@@ -37,70 +38,69 @@ fun HomeProductosScreen(
     var query by remember { mutableStateOf("") }
 
     // --------- Badge carrito (usa siempre initial) ----------
-    val cartBadge by carritoViewModel.totalEnCarrito.collectAsState(initial = 0)
+    val cartBadge by carritoViewModel.totalEnCarrito.collectAsState()
 
     // --------- Network / VM (tipo explícito para evitar el error del delegate) ----------
-    val retrofit: Retrofit by remember {
+    val retrofit by remember {
         mutableStateOf(
-            NetworkModule.retrofit(
-                NetworkModule.okHttp { /* token si aplica */ null }
-            )
+            NetworkModule.retrofit(NetworkModule.okHttp { null })
         )
     }
-    val catalogService: CatalogService = remember { retrofit.create(CatalogService::class.java) }
-    val catalogRepo = remember { CatalogRepository(catalogService) }
-    val catalogVm: CatalogNetworkViewModel = viewModel(
-        factory = CatalogNetworkVMFactory(catalogRepo)
-    )
 
-    val state by catalogVm.state.collectAsState()
+    val service = remember { retrofit.create(CatalogService::class.java) }
+    val repo = remember { CatalogRepository(service) }
+    val vm = remember { CatalogHomeViewModel(repo) }
 
-    // Carga catálogo una sola vez
-    LaunchedEffect(Unit) { catalogVm.loadCatalog() }
+    val prodsState by vm.products.collectAsState()
+    val catsState by vm.categories.collectAsState()
 
-    // --------- Bottom bar items ----------
-    val bottomItems: List<BottomItem> = remember {
+    LaunchedEffect(Unit) { vm.loadAll() }
+
+    // -------- Bottom bar items + estado seleccionado --------
+    val bottomItems = remember {
         listOf(
-            BottomItem("home",    R.drawable.home,    "Inicio",  "Inicio"),
-            BottomItem("menu",    R.drawable.menu,    "Menú",  "Menú"),
-            BottomItem("carrito",    R.drawable.shopping_cart, "Carro",   "Carro"),
-            BottomItem("profile", R.drawable.user,  "Perfil",  "Perfil"),
-            BottomItem("more",    R.drawable.figura,  "Más",     "Más")
+            BottomItem("home", R.drawable.home, "Inicio", iconSize = 50.dp),
+            BottomItem("menu", R.drawable.menu, "Menú", iconSize = 45.dp),
+            BottomItem("carrito", R.drawable.carrito, "Carrito", iconSize = 40.dp),
+            BottomItem("perfil", R.drawable.perfil, "Perfil", iconSize = 40.dp),
+            BottomItem("config", R.drawable.icon_tatapp, "Más", iconSize = 50.dp, tintIcon = false)
         )
     }
     var selectedBottom by remember { mutableStateOf("home") }
+    val snackbar = remember { SnackbarHostState() }
 
     Scaffold(
+        snackbarHost = { SnackbarHost(snackbar)},
         topBar = {
             SearchTopBar(
                 query = query,
                 onQueryChange = { query = it },
-                onSearch = { /* TODO: conectar a búsqueda si aplica */ },
-                onVoiceClick = { /* TODO */ },
+                onSearch = { /* noop: conectar a búsqueda si aplica */ },
+                onVoiceClick = { /* noop */ },
                 isDark = isDark,
                 onToggleDark = { settingsVm.toggleDark() },
-                onOpenPerfil = { navController.navigate("perfil") },
+                onOpenPerfil = { navController.navigate("login") },
                 onOpenConfig = { navController.navigate("config") }
             )
         },
         bottomBar = {
             BottomHomeBar(
-                items = bottomItems.map { item ->
-                    if (item.id == "carrito") item.copy(badgeCount = cartBadge) else item
-                },
+                items = bottomItems.map { if (it.id == "carrito") it.copy(badgeCount = cartBadge) else it },
                 selectedId = selectedBottom,
                 onItemSelected = { item ->
                     selectedBottom = item.id
                     when (item.id) {
                         "home"    -> navController.navigate("homeProductosScreen") { launchSingleTop = true }
-                        "menu"    -> navController.navigate("menu")
-                        "carrito"    -> navController.navigate("carrito")
-                        "perfil" -> navController.navigate("perfil")
-                        "config"    -> navController.navigate("config")
+                        "menu"    -> navController.navigate("homeProductosScreen")
+                        "carrito" -> navController.navigate("carrito")
+                        "perfil"  -> navController.navigate("registro")
+                        "config"  -> navController.navigate("homeProductosScreen")
                     }
                 },
-                backgroundColor = MaterialTheme.colorScheme.background,
-                contentColor = MaterialTheme.colorScheme.onBackground
+                backgroundColor = Color(0xFFF47606),
+                contentColor = Color.White,
+                selectedLift = 58.dp,
+                selectedBubbleSize = 70.dp
             )
         }
     ) { inner ->
@@ -109,40 +109,59 @@ fun HomeProductosScreen(
                 .fillMaxSize()
                 .padding(inner)
         ) {
-            // --------------------- Título / encabezado de sección ---------------------
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "Catálogo",
-                    style = MaterialTheme.typography.titleMedium
-                )
+            // --------------------- CATEGORIAS REALES ---------------------
+            when (val cs = catsState) {
+                is UiState.Loading, UiState.Loading -> CenterLoader()
+                is UiState.Error -> Text("Error categorías: ${cs.message}")
+                is UiState.Success -> {
+                    val items = mapToCategoriaItems(cs.data)
+                    if (items.isNotEmpty()){
+                        Text(
+                            text = "Explora por categoria",
+                            style = MaterialTheme.typography.titleMedium,
+                            modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 6.dp)
+                        )
+                        CarruselCategorias(
+                            categorias = items,
+                            onCategoriaClick = { cat ->
+                                navController.navigate("subcategorias/${cat.nombreCat}")
+                            }
+                        )
+                        Spacer(Modifier.height(12.dp))
+                    }
+                }
+
+                UiState.Idle -> { /* No hacer nada TODO()*/ }
             }
 
-            // --------------------- Secciones (carruseles por categorías) ---------------------
-            when (val s = state) {
-                is UiState.Idle, UiState.Loading -> CenterLoader()
-                is UiState.Error -> ErrorWithRetry(message = s.message) { catalogVm.loadCatalog() }
-                is UiState.Success -> {
-                    val productos = s.data
+            // --------------------- PRODUCTOS REALES ---------------------
+            Text(
+                text = "Catálogo",
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(horizontal = 16.dp)
+            )
 
+            when (val ps = prodsState) {
+                is UiState.Idle    -> Unit
+                is UiState.Loading -> CenterLoader()
+                is UiState.Error   -> ErrorMini("Error catálogo: ${ps.message}")
+                is UiState.Success -> {
+                    val productos = ps.data
+
+                    // Sección 1
                     SectionCarousel(
                         title = "Recomendados",
                         products = productos,
                         onProductClick = { p -> navController.navigate("detalle/${p.id}") },
-                        onAddToCart = { _ -> /* TODO: integrar acción de carrito si quieres */ }
+                        onAddToCart = { /* TODO: agregar al carrito/Room-API */ }
                     )
-
-                    Spacer(Modifier.height(8.dp))
-
+                    Spacer(Modifier.height(12.dp))
+                    // Sección 2
                     SectionCarousel(
                         title = "Populares",
                         products = productos,
                         onProductClick = { p -> navController.navigate("detalle/${p.id}") },
-                        onAddToCart = { _ -> /* TODO */ }
+                        onAddToCart = { /* TODO: agregar al carrito/Room-API */ }
                     )
 
                     Spacer(Modifier.height(12.dp))
@@ -152,8 +171,20 @@ fun HomeProductosScreen(
     }
 }
 
-/* =================== Sección reutilizable (carrusel horizontal) =================== */
 
+/* ---------- Helper: Category (dominio) -> CategoriaItem (UI del carrusel) ---------- */
+private fun mapToCategoriaItems(categories: List<com.example.tatapp.domain.model.Category>): List<CategoriaItem> {
+    fun iconFor(name: String): Int = when (name.lowercase()) {
+        "alimentos" -> R.drawable.alimentos
+        "salud"     -> R.drawable.salud
+        "mascotas"  -> R.drawable.mascotas
+        "jardín"    -> R.drawable.jardin
+        else        -> R.drawable.figura
+    }
+    return categories.map { CategoriaItem(nombreCat = it.name, iconoCat = iconFor(it.name)) }
+}
+
+/* =================== Sección reutilizable (carrusel horizontal) =================== */
 @Composable
 private fun SectionCarousel(
     title: String,
@@ -164,15 +195,7 @@ private fun SectionCarousel(
     if (products.isEmpty()) return
 
     Column(Modifier.fillMaxWidth()) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(title, style = MaterialTheme.typography.titleSmall)
-        }
-
+        Text(title, style = MaterialTheme.typography.titleSmall, modifier = Modifier.padding(horizontal = 16.dp))
         Spacer(Modifier.height(6.dp))
 
         LazyRow(
@@ -191,7 +214,6 @@ private fun SectionCarousel(
 }
 
 /* =================== Card neutral mínima (sustituible por la tuya) =================== */
-
 @Composable
 private fun ProductCardNeutral(
     product: Product,
@@ -214,20 +236,12 @@ private fun ProductCardNeutral(
     }
 }
 
-/* =================== Helpers neutrales =================== */
-
+/* ---------- Helpers UI ---------- */
 @Composable private fun CenterLoader() {
-    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+    Box(Modifier.fillMaxWidth().padding(16.dp), contentAlignment = Alignment.Center) {
         CircularProgressIndicator()
     }
 }
-
-@Composable private fun ErrorWithRetry(message: String, onRetry: () -> Unit) {
-    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(message)
-            Spacer(Modifier.height(8.dp))
-            Button(onClick = onRetry) { Text("Reintentar") }
-        }
-    }
+@Composable private fun ErrorMini(msg: String) {
+    Text(text = msg, color = MaterialTheme.colorScheme.error, modifier = Modifier.padding(16.dp))
 }

@@ -138,7 +138,12 @@ class MainActivity : ComponentActivity() {
                         )
                     }
 
-                    composable("registro") { FormRegistro(navController) }
+                    composable("registro") {
+                        FormRegistro(
+                            navController = navController,
+                            viewModel = carritoViewModel
+                        )
+                    }
                 }
             }
         }

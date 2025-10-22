@@ -17,10 +17,13 @@ object NetworkModule {
     fun okHttp(tokenProvider: () -> String? = { null }): OkHttpClient =
         OkHttpClient.Builder()
             .addInterceptor { chain ->
-                val req = chain.request().newBuilder().apply {
-                    tokenProvider()?.let { header("Authorization", "Bearer $it") }
-                }.build()
-                chain.proceed(req)
+                val req = chain.request()
+                val b = req.newBuilder()
+                    .header("Accept", "application/json")
+                    .header("Accept-Charset", "utf-8")
+
+                tokenProvider()?.let { b.header("Authorization", "Bearer $it") }
+                chain.proceed(b.build())
             }
             .addInterceptor(HttpLoggingInterceptor().apply {
                 level = HttpLoggingInterceptor.Level.BODY
@@ -29,7 +32,6 @@ object NetworkModule {
 
     fun retrofit(client: OkHttpClient): Retrofit {
         val gson = GsonBuilder()
-            .setLenient()
             .create()
 
         return Retrofit.Builder()

@@ -21,8 +21,12 @@ class DetalleNetworkViewModel(
         viewModelScope.launch {
             _state.value = UiState.Loading
             runCatching { repo.getProduct(id) }
-                .onSuccess { _state.value = UiState.Success(it) }
-                .onFailure { e -> _state.value = UiState.Error(e.message ?: "Error") }
+                .onSuccess { product ->
+                    _state.value = UiState.Success<Product>(product)
+                }
+                .onFailure { e ->
+                    _state.value = UiState.Error(e.message ?: "Error al cargar producto")
+                }
         }
     }
 }

@@ -11,6 +11,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -19,21 +20,38 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.tatapp.R
+import com.example.tatapp.ui.components.BottomHomeBar
+import com.example.tatapp.ui.components.BottomItem
 import com.example.tatapp.ui.components.PasswordField
 import com.example.tatapp.ui.components.esRutValidoConFuncion
 import com.example.tatapp.ui.components.formatearRUT
 import com.example.tatapp.ui.components.rutCompleto
+import com.example.tatapp.ui.screens.carrito.CarritoViewModel
 import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FormRegistro(
     navController: NavController,
-    vm: FormRegistroViewModel = viewModel()
+    vm: FormRegistroViewModel = viewModel(),
+    viewModel: CarritoViewModel
 ) {
     val focusManager = LocalFocusManager.current
     val snackbarHostState = remember { SnackbarHostState() }
     val scrollState = rememberScrollState()
+    var selectedBottom by remember { mutableStateOf("registro") }
+    val cartBadge by viewModel.totalEnCarrito.collectAsState()
+    val snackbar = remember { SnackbarHostState() }
+    val items = remember {
+        listOf(
+            BottomItem("home", com.example.tatapp.R.drawable.home, "Inicio", iconSize = 50.dp),
+            BottomItem("menu", com.example.tatapp.R.drawable.menu, "Menú", iconSize = 45.dp),
+            BottomItem("carrito", com.example.tatapp.R.drawable.carrito, "Carrito", iconSize = 40.dp),
+            BottomItem("perfil", com.example.tatapp.R.drawable.perfil, "Perfil", iconSize = 40.dp),
+            BottomItem("config", R.drawable.icon_tatapp, "Más", iconSize = 50.dp, tintIcon = false)
+        )
+    }
 
     // Confirmación y navegación
     LaunchedEffect(vm.registroExitoso) {
@@ -57,7 +75,27 @@ fun FormRegistro(
                 }
             )
         },
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
+        bottomBar = {
+            BottomHomeBar(
+                items = items.map { if (it.id == "carrito") it.copy(badgeCount = cartBadge) else it },
+                selectedId = selectedBottom,
+                onItemSelected = { item ->
+                    selectedBottom = item.id
+                    when (item.id) {
+                        "home"    -> navController.navigate("homeProductosScreen") { launchSingleTop = true }
+                        "menu"    -> navController.navigate("homeProductosScreen")
+                        "carrito" -> navController.navigate("carrito")
+                        "perfil"  -> navController.navigate("registro")
+                        "config"  -> navController.navigate("homeProductosScreen")
+                    }
+                },
+                backgroundColor = Color(0xFFF47606),
+                contentColor = Color.White,
+                selectedLift = 58.dp,
+                selectedBubbleSize = 70.dp
+            )
+        },
+        snackbarHost = { SnackbarHost(hostState = snackbar) }
     ) { padding ->
         Column(
             modifier = Modifier

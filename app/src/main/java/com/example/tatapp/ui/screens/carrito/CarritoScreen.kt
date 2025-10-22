@@ -14,7 +14,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -33,28 +35,22 @@ import java.util.Locale
 @Composable
 fun CarritoScreen(navController: NavHostController, viewModel: CarritoViewModel) {
     val carrito by viewModel.carrito.collectAsState()
-    val totalEnCarrito by remember(carrito) { derivedStateOf { carrito.sumOf { it.cantidad } } }
+    var selectedBottom by remember { mutableStateOf("carrito") }
+    //val totalEnCarrito by remember(carrito) { derivedStateOf { carrito.sumOf { it.cantidad } } }
+    val cartBadge by viewModel.totalEnCarrito.collectAsState()
 
     val subtotal: Long = carrito.sumOf { it.precio * it.cantidad }.toLong()
     val total: Long = viewModel.totalPrecio.value.toLong()
 
-    val items = listOf(
-        BottomItem("home", com.example.tatapp.R.drawable.home, "Inicio"),
-        BottomItem("home", com.example.tatapp.R.drawable.menu, "Menú"),
-        BottomItem(
-            "carrito",
-            com.example.tatapp.R.drawable.shopping_cart,
-            "Carrito",
-            label = "CARRO",
-            showLabelAlways = true,
-            badgeCount = totalEnCarrito,
-            iconSize = 50.dp,
-            labelFontSize = 16.sp,
-            itemWidth = 84.dp
-        ),
-        BottomItem("home", com.example.tatapp.R.drawable.user, "Perfil"),
-        BottomItem("home", R.drawable.figura, "Icono personalizado")
-    )
+    val items = remember {
+        listOf(
+            BottomItem("home", R.drawable.home, "Inicio", iconSize = 50.dp),
+            BottomItem("menu", R.drawable.menu, "Menú", iconSize = 45.dp),
+            BottomItem("carrito", R.drawable.carrito, "Carrito", iconSize = 40.dp),
+            BottomItem("perfil", R.drawable.perfil, "Perfil", iconSize = 40.dp),
+            BottomItem("config", R.drawable.icon_tatapp, "Más", iconSize = 50.dp, tintIcon = false)
+        )
+    }
 
     Scaffold(
         topBar = {
@@ -75,21 +71,22 @@ fun CarritoScreen(navController: NavHostController, viewModel: CarritoViewModel)
         },
         bottomBar = {
             BottomHomeBar(
-                items = items,
-                selectedId = "carrito",
-                onItemSelected = { tapped ->
-                    when (tapped.id) {
-                        "home" -> navController.navigate("home")
-                        "menu" -> navController.navigate("home")
-                        "perfil" -> navController.navigate("home")
-                        "icono" -> navController.navigate("home")
+                items = items.map { if (it.id == "carrito") it.copy(badgeCount = cartBadge) else it },
+                selectedId = selectedBottom,
+                onItemSelected = { item ->
+                    selectedBottom = item.id
+                    when (item.id) {
+                        "home"    -> navController.navigate("homeProductosScreen") { launchSingleTop = true }
+                        "menu"    -> navController.navigate("homeProductosScreen")
                         "carrito" -> navController.navigate("carrito")
+                        "perfil"  -> navController.navigate("registro")
+                        "config"  -> navController.navigate("homeProductosScreen")
                     }
                 },
-                barHeight = 137.dp,
-                itemWidth = 68.dp,
-                iconSize = 40.dp,
-                labelFontSize = 16.sp
+                backgroundColor = Color(0xFFF47606),
+                contentColor = Color.White,
+                selectedLift = 58.dp,
+                selectedBubbleSize = 70.dp
             )
         }
     ) { innerPadding ->
@@ -99,7 +96,6 @@ fun CarritoScreen(navController: NavHostController, viewModel: CarritoViewModel)
                 .padding(horizontal = 16.dp, vertical = 12.dp)
                 .fillMaxSize()
         ) {
-
 
             if (carrito.isEmpty()) {
                 Text(
