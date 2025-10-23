@@ -1,19 +1,20 @@
 package com.example.tatapp.ui.components
 
 import androidx.annotation.DrawableRes
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Badge
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -21,58 +22,81 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.tatapp.R
 
 data class BottomItem(
     val id: String,
     @DrawableRes val iconRes: Int,
     val contentDescription: String,
-    val label: String? = null,
-    val showLabelAlways: Boolean = false,
+    val label: String,
     val badgeCount: Int = 0,
-    val iconSize: Dp? = null,
-    val labelFontSize: TextUnit? = null,
-    val itemWidth: Dp? = null,
-    val tintIcon: Boolean = true
+    val tintIcon: Boolean = false
 )
 
 @Composable
 fun BottomHomeBar(
-    items: List<BottomItem>,
+    carritoCount: Int = 0,
     selectedId: String,
-    onItemSelected: (BottomItem) -> Unit,
-    modifier: Modifier = Modifier,
-    backgroundColor: Color = MaterialTheme.colorScheme.surfaceVariant,
-    contentColor: Color = MaterialTheme.colorScheme.onSurfaceVariant,
-    badgeColor: Color = MaterialTheme.colorScheme.error,
-    barHeight: Dp = 137.dp,
-    itemWidth: Dp = 68.dp,
-    iconSize: Dp = 60.dp,
-    labelFontSize: TextUnit = 16.sp
+    onItemSelected: (String) -> Unit,
+
 ) {
+    val items = listOf(
+        BottomItem(
+            id = "home",
+            iconRes = R.drawable.ico_home,
+            contentDescription = "Inicio",
+            label = "Home",
+            tintIcon = true
+        ),
+        BottomItem(
+            id = "detalle",
+            iconRes = R.drawable.ico_detalle,
+            contentDescription = "Detalle",
+            label = "Detalle",
+            tintIcon = true
+        ),
+        BottomItem(
+            id = "carrito",
+            iconRes = R.drawable.ico_carrito,
+            contentDescription = "Carrito",
+            label = "Carrito",
+            tintIcon = true,
+            badgeCount = carritoCount
+        ),
+        BottomItem(
+            id = "perfil",
+            iconRes = R.drawable.ico_perfil,
+            contentDescription = "Perfil",
+            label = "Perfil",
+            tintIcon = true
+        ),
+        BottomItem(
+            id = "logo",
+            iconRes = R.drawable.ico_loro,
+            contentDescription = "Loro",
+            label = "Loro",
+            tintIcon = false
+        )
+    )
+
     Box(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxWidth()
-            .background(backgroundColor)
-            .height(barHeight)
-            .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Bottom))
+            .background(MaterialTheme.colorScheme.surfaceVariant)
+            .height(80.dp)
+            .navigationBarsPadding()
+            .padding(horizontal = 8.dp)
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 10.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier.fillMaxSize(),
+            horizontalArrangement = Arrangement.SpaceAround,
             verticalAlignment = Alignment.CenterVertically
         ) {
             items.forEach { item ->
                 BottomBarItem(
                     item = item,
                     selected = item.id == selectedId,
-                    onClick = { onItemSelected(item) },
-                    iconTint = contentColor,
-                    labelColor = contentColor,
-                    itemWidth = item.itemWidth ?: itemWidth,
-                    iconSize = iconSize,
-                    labelFontSize = labelFontSize
+                    onClick = { onItemSelected(item.id) }
                 )
             }
         }
@@ -80,72 +104,77 @@ fun BottomHomeBar(
 }
 
 @Composable
-private fun BottomBarItem(
+fun BottomBarItem(
     item: BottomItem,
     selected: Boolean,
     onClick: () -> Unit,
-    iconTint: Color,
-    labelColor: Color,
-    itemWidth: Dp = 60.dp,
-    iconSize: Dp = 30.dp,
-    labelFontSize: TextUnit = 16.sp,
-    badgeColor: Color = Color.Red
+    iconSize: Dp = 38.dp,
+    labelFontSize: TextUnit = 13.sp
 ) {
-    val effectiveIconSize = item.iconSize ?: iconSize
-    val effectiveLabelSize = item.labelFontSize ?: labelFontSize
-    val effectiveTint = if (item.tintIcon) iconTint else Color.Unspecified
+    val scale by animateFloatAsState(
+        targetValue = if (selected) 1.25f else 1.0f,
+        animationSpec = spring(
+            dampingRatio = 0.6f, // menos rebote
+            stiffness = 300f      // más suave
+        )
+    )
+
+    val tint = if (item.tintIcon) {
+        if (selected) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurface
+    } else {
+        Color.Unspecified
+    }
 
     Column(
         modifier = Modifier
-            .width(itemWidth)
-            .heightIn(min = 56.dp)
-            .clickable(onClick = onClick),
+            .width(65.dp)
+            .clickable { onClick() },
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-
         Box(
-            modifier = Modifier.requiredSize(effectiveIconSize), // <- corregido
-            contentAlignment = Alignment.Center
+            modifier = Modifier
+                .size(36.dp)
+                .scale(scale),
+
+            contentAlignment = Alignment.TopEnd
         ) {
-            Icon(
+            Image(
                 painter = painterResource(id = item.iconRes),
                 contentDescription = item.contentDescription,
                 modifier = Modifier.fillMaxSize(),
-                tint = effectiveTint
+                colorFilter = if (tint != Color.Unspecified)
+                    androidx.compose.ui.graphics.ColorFilter.tint(tint)
+                else null
             )
+
             if (item.badgeCount > 0) {
-                Box(
+                Badge(
                     modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .offset(x = 8.dp, y = (-8).dp)
+                        .offset(x = 8.dp, y = (-4).dp)
+                        .size(18.dp),
+                    containerColor = Color.Red
                 ) {
-                    Badge(
-                        modifier = Modifier.size(25.dp),
-                        containerColor = badgeColor
-                    ) {
-                        Text(
-                            text = item.badgeCount.toString(),
-                            color = Color.White,
-                            fontSize = 20.sp
-                        )
-                    }
+                    Text(
+                        text = item.badgeCount.toString(),
+                        color = Color.White,
+                        fontSize = 10.sp
+                    )
                 }
             }
         }
 
-        if (item.label != null && (item.showLabelAlways || selected)) {
-            Spacer(Modifier.height(6.dp))
+        if (selected) {
+            Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = item.label,
-                color = labelColor,
-                fontSize = effectiveLabelSize,
-                fontWeight = FontWeight.SemiBold,
-                textAlign = TextAlign.Center,
-                maxLines = 1,
-                softWrap = false,
-                modifier = Modifier.width(itemWidth)
+                color = MaterialTheme.colorScheme.onSurface,
+                fontSize = labelFontSize,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center
             )
         }
     }
+
+
 }
