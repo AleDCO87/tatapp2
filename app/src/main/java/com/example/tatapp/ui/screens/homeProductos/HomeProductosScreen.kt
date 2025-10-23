@@ -64,6 +64,7 @@ fun HomeProductosScreen(
     settingsVm: SettingsViewModel,
     context: Context = LocalContext.current
 ) {
+
     val isDark by settingsVm.darkMode.collectAsState()
     var searchQuery by remember { mutableStateOf("") }
 
@@ -73,30 +74,14 @@ fun HomeProductosScreen(
         productosJson = loadProductosFromJson(context)
     }
 
-    val carrito by carritoViewModel.carrito.collectAsState()
+    var selectedId by remember { mutableStateOf("home") }
+    val carrito by carritoViewModel.carrito.collectAsState(initial = emptyList())
     val totalEnCarrito = carrito.sumOf { it.cantidad }
 
     val currentRoute = navController.currentBackStackEntryFlow
         .collectAsState(initial = navController.currentBackStackEntry)
         .value?.destination?.route ?: "home"
 
-    val items = listOf(
-        BottomItem("homeProductosScreen", R.drawable.home, "Inicio"),
-        BottomItem("home", R.drawable.menu, "Menú"),
-        BottomItem(
-            "carrito",
-            R.drawable.shopping_cart,
-            "Carrito",
-            label = "CARRO",
-            showLabelAlways = true,
-            badgeCount = totalEnCarrito,
-            iconSize = 50.dp,
-            labelFontSize = 16.sp,
-            itemWidth = 84.dp
-        ),
-        BottomItem("login", R.drawable.user, "Perfil"),
-        BottomItem("home", R.drawable.figura, "Icono personalizado")
-    )
 
     val todasCategorias = categoriasProductos + categoriasServicios
 
@@ -122,23 +107,18 @@ fun HomeProductosScreen(
         },
         bottomBar = {
             BottomHomeBar(
-                items = items,
-                selectedId = currentRoute,
-                onItemSelected = { tapped ->
-                    if (tapped.id != currentRoute) {
-                        navController.navigate(tapped.id) {
-                            launchSingleTop = true
-                            restoreState = true
-                            popUpTo(navController.graph.startDestinationId) { saveState = true }
-                        }
+                carritoCount = totalEnCarrito,
+                selectedId = selectedId,
+                onItemSelected = { tappedId ->
+                    selectedId = tappedId
+                    when (tappedId) {
+                        "home" -> navController.navigate("homeProductosScreen")
+                        "detalle" -> navController.navigate("home")
+                        "carrito" -> navController.navigate("carrito")
+                        "perfil" -> navController.navigate("login")
+                        "logo" -> navController.navigate("home")
                     }
-                },
-                //backgroundColor = MaterialTheme.colorScheme.surfaceVariant,
-                //contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                barHeight = 137.dp,
-                itemWidth = 68.dp,
-                iconSize = 40.dp,
-                labelFontSize = 16.sp
+                }
             )
         }
 

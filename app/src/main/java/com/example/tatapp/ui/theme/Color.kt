@@ -87,3 +87,34 @@ val tatapPrimary = Color(0xFFFF0000)
 val tatapTextFondo = Color(0xFF000000)
 
 val error = Color(0xFFBA1A1A)
+
+
+val naranjoInstitucional = Color(0xFFF47606)
+
+val onNaranjoInstitucional = Color(0xFFffffff)
+
+val fondoClaro = Color(0xFFFDFBF9)
+
+val onFondoClaro = Color(0xFF050505)
+
+val fondoOscuro = Color(0xFF2E3A46)
+
+val onFondoOscuro = Color(0xFFffffff)
+
+val principal = Color(0xFFF9953F)
+
+val onPrincipal = Color(0xFFffffff)
+
+val principal2 = Color(0xFF2EC4B6)
+
+val onPrincipal2 = Color(0xFFffffff)
+
+val barraInferior = Color(0xFFF9953F)
+
+val onBarraInferior = Color(0xFFffffff)
+
+val bordeBarraBusqueda = Color(0xFFE3E3E3)
+
+val colorBlanco = Color(0xFFffffff)
+
+val textoGris = Color(0xFF6B6B6B)

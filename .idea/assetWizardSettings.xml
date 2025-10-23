@@ -317,8 +317,9 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputName" value="outline_store" />
-                            <entry key="sourceFile" value="D:\00_Android_Studio_Projects\tatapp" />
+                            <entry key="assetSourceType" value="FILE" />
+                            <entry key="outputName" value="ico_perfil" />
+                            <entry key="sourceFile" value="D:\Bootcamp\Taller\Material\iconos\ico_perfil.svg" />
                           </map>
                         </option>
                       </PersistentState>

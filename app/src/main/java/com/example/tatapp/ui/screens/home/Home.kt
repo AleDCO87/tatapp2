@@ -42,27 +42,10 @@ fun Home(
 ) {
     var query by remember { mutableStateOf("")}
 
-    val totalEnCarrito = carritoViewModel.totalEnCarrito
+    var selectedId by remember { mutableStateOf("home") }
+    val carritoCount by carritoViewModel.carrito.collectAsState(initial = emptyList())
+    val totalEnCarrito = carritoCount.sumOf { it.cantidad }
 
-    // bottom bar state
-    var selectedBottom by remember { mutableStateOf("home") }
-    val bottomItems = listOf(
-        BottomItem("home", R.drawable.home, "Inicio", iconSize = 40.dp),
-        BottomItem("homeProductosScreen", R.drawable.menu, "Menú", iconSize = 40.dp),
-        BottomItem(
-            "carrito",
-            R.drawable.shopping_cart,
-            "Carrito",
-            label = "CARRO",
-            showLabelAlways = true,
-            badgeCount = totalEnCarrito,
-            iconSize = 50.dp,
-            labelFontSize = 16.sp,
-            itemWidth = 84.dp
-        ),
-        BottomItem("login", R.drawable.user, "Perfil", iconSize = 40.dp),
-        BottomItem("home", R.drawable.figura, "Icono personalizado", iconSize = 40.dp)
-    )
 
     Scaffold(
         topBar = {
@@ -79,16 +62,16 @@ fun Home(
         },
         bottomBar = {
             BottomHomeBar(
-                items = bottomItems,
-                selectedId = selectedBottom,
-                onItemSelected = { item ->
-                    selectedBottom = item.id
-                    when (item.id) {
-                        "home"   -> navController.navigate("homeProductosScreen")
-                        "homeProductosScreen"   -> navController.navigate("homeProductosScreen")
-                        "carrito"   -> navController.navigate("carrito")
-                        "perfil"-> navController.navigate("perfil")
-                        "config"   -> navController.navigate("config")
+                carritoCount = totalEnCarrito,
+                selectedId = selectedId,
+                onItemSelected = { tappedId ->
+                    selectedId = tappedId
+                    when (tappedId) {
+                        "home" -> navController.navigate("homeProductosScreen")
+                        "detalle" -> navController.navigate("home")
+                        "carrito" -> navController.navigate("carrito")
+                        "perfil" -> navController.navigate("login")
+                        "logo" -> navController.navigate("home")
                     }
                 }
             )

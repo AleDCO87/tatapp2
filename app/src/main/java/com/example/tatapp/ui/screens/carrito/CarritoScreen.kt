@@ -3,6 +3,7 @@ package com.example.tatapp.ui.screens.carrito
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -14,7 +15,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -38,23 +41,7 @@ fun CarritoScreen(navController: NavHostController, viewModel: CarritoViewModel)
     val subtotal: Long = carrito.sumOf { it.precio * it.cantidad }.toLong()
     val total: Long = viewModel.totalPrecio.toLong()
 
-    val items = listOf(
-        BottomItem("home", com.example.tatapp.R.drawable.home, "Inicio"),
-        BottomItem("home", com.example.tatapp.R.drawable.menu, "Menú"),
-        BottomItem(
-            "carrito",
-            com.example.tatapp.R.drawable.shopping_cart,
-            "Carrito",
-            label = "CARRO",
-            showLabelAlways = true,
-            badgeCount = totalEnCarrito,
-            iconSize = 50.dp,
-            labelFontSize = 16.sp,
-            itemWidth = 84.dp
-        ),
-        BottomItem("home", com.example.tatapp.R.drawable.user, "Perfil"),
-        BottomItem("home", R.drawable.figura, "Icono personalizado")
-    )
+    var selectedId by remember { mutableStateOf("carrito") }
 
     Scaffold(
         topBar = {
@@ -66,30 +53,27 @@ fun CarritoScreen(navController: NavHostController, viewModel: CarritoViewModel)
                     }
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface,            // Fondo
-                    titleContentColor = MaterialTheme.colorScheme.onSurface,       // Texto
-                    navigationIconContentColor = MaterialTheme.colorScheme.onSurface, // Iconos izq.
-                    actionIconContentColor = MaterialTheme.colorScheme.onSurface   // Iconos der.
+                    containerColor = MaterialTheme.colorScheme.background,            // Fondo
+                    titleContentColor = MaterialTheme.colorScheme.onBackground,       // Texto
+                    navigationIconContentColor = MaterialTheme.colorScheme.onBackground, // Iconos izq.
+                    actionIconContentColor = MaterialTheme.colorScheme.onBackground   // Iconos der.
                 )
             )
         },
         bottomBar = {
             BottomHomeBar(
-                items = items,
-                selectedId = "carrito",
-                onItemSelected = { tapped ->
-                    when (tapped.id) {
-                        "home" -> navController.navigate("home")
-                        "menu" -> navController.navigate("home")
-                        "perfil" -> navController.navigate("home")
-                        "icono" -> navController.navigate("home")
+                carritoCount = carrito.size,
+                selectedId = selectedId,
+                onItemSelected = { id ->
+                    selectedId = id
+                    when (id) {
+                        "home" -> navController.navigate("homeProductosScreen")
+                        "detalle" -> navController.navigate("home")
                         "carrito" -> navController.navigate("carrito")
+                        "perfil" -> navController.navigate("login")
+                        "logo" -> navController.navigate("home")
                     }
-                },
-                barHeight = 137.dp,
-                itemWidth = 68.dp,
-                iconSize = 40.dp,
-                labelFontSize = 16.sp
+                }
             )
         }
     ) { innerPadding ->

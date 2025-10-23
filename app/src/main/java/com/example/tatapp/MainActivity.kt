@@ -46,7 +46,7 @@ class MainActivity : ComponentActivity() {
         splashScreen.setKeepOnScreenCondition { false }
         super.onCreate(savedInstanceState)
         FirebaseApp.initializeApp(this)
-        enableEdgeToEdge()
+        //enableEdgeToEdge()
 
         // Crear DB y ViewModel con Factory
         val db = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "app_db").build()
