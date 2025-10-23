@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!-- Por defecto, no permitir cleartext -->
+    <base-config cleartextTrafficPermitted="false" />
+    <!-- Habilitar cleartext SOLO para 3.139.90.244 -->
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="false">3.139.90.244</domain>
+    </domain-config>
+</network-security-config>

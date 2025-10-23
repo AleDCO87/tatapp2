@@ -36,11 +36,22 @@ import java.util.Locale
 @Composable
 fun CarritoScreen(navController: NavHostController, viewModel: CarritoViewModel) {
     val carrito by viewModel.carrito.collectAsState()
-    val totalEnCarrito by remember(carrito) { derivedStateOf { carrito.sumOf { it.cantidad } } }
+    var selectedBottom by remember { mutableStateOf("carrito") }
+    //val totalEnCarrito by remember(carrito) { derivedStateOf { carrito.sumOf { it.cantidad } } }
+    val cartBadge by viewModel.totalEnCarrito.collectAsState()
 
     val subtotal: Long = carrito.sumOf { it.precio * it.cantidad }.toLong()
-    val total: Long = viewModel.totalPrecio.toLong()
+    val total: Long = viewModel.totalPrecio.value.toLong()
 
+    val items = remember {
+        listOf(
+            BottomItem("home", R.drawable.home, "Inicio", iconSize = 50.dp),
+            BottomItem("menu", R.drawable.menu, "Menú", iconSize = 45.dp),
+            BottomItem("carrito", R.drawable.carrito, "Carrito", iconSize = 40.dp),
+            BottomItem("perfil", R.drawable.perfil, "Perfil", iconSize = 40.dp),
+            BottomItem("config", R.drawable.icon_tatapp, "Más", iconSize = 50.dp, tintIcon = false)
+        )
+    }
     var selectedId by remember { mutableStateOf("carrito") }
 
     Scaffold(
@@ -62,6 +73,22 @@ fun CarritoScreen(navController: NavHostController, viewModel: CarritoViewModel)
         },
         bottomBar = {
             BottomHomeBar(
+                items = items.map { if (it.id == "carrito") it.copy(badgeCount = cartBadge) else it },
+                selectedId = selectedBottom,
+                onItemSelected = { item ->
+                    selectedBottom = item.id
+                    when (item.id) {
+                        "home"    -> navController.navigate("homeProductosScreen") { launchSingleTop = true }
+                        "menu"    -> navController.navigate("homeProductosScreen")
+                        "carrito" -> navController.navigate("carrito")
+                        "perfil"  -> navController.navigate("registro")
+                        "config"  -> navController.navigate("homeProductosScreen")
+                    }
+                },
+                backgroundColor = Color(0xFFF47606),
+                contentColor = Color.White,
+                selectedLift = 58.dp,
+                selectedBubbleSize = 70.dp
                 carritoCount = carrito.size,
                 selectedId = selectedId,
                 onItemSelected = { id ->
@@ -83,7 +110,6 @@ fun CarritoScreen(navController: NavHostController, viewModel: CarritoViewModel)
                 .padding(horizontal = 16.dp, vertical = 12.dp)
                 .fillMaxSize()
         ) {
-
 
             if (carrito.isEmpty()) {
                 Text(
@@ -109,22 +135,6 @@ fun CarritoScreen(navController: NavHostController, viewModel: CarritoViewModel)
                     onPagar = { /* TODO: flujo de pago */ },
                     onVaciar = { viewModel.vaciarCarrito() }
                 )
-
-                /*Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(
-                        "Total: \$${NumberFormat.getNumberInstance(Locale.forLanguageTag("es-CL")).format(viewModel.totalPrecio)}",
-                        fontSize = 22.sp,
-                        modifier = Modifier.weight(1f)
-                    )
-                    Button(
-                        onClick = { /* Acción para pagar */ },
-                        modifier = Modifier.weight(1f).height(50.dp)
-                    ) { Text("Pagar", fontSize = 20.sp) }
-                }*/
             }
         }
     }

@@ -15,6 +15,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -42,6 +43,28 @@ fun Home(
 ) {
     var query by remember { mutableStateOf("")}
 
+    val badgeCount by carritoViewModel.totalEnCarrito.collectAsState()
+
+
+    // bottom bar state
+    var selectedBottom by remember { mutableStateOf("home") }
+    val bottomItems = listOf(
+        BottomItem("home", R.drawable.home, "Inicio", iconSize = 40.dp),
+        BottomItem("homeProductosScreen", R.drawable.menu, "Menú", iconSize = 40.dp),
+        BottomItem(
+            "carrito",
+            R.drawable.shopping_cart,
+            "Carrito",
+            label = "CARRO",
+            showLabelAlways = true,
+            badgeCount = badgeCount,
+            iconSize = 50.dp,
+            labelFontSize = 16.sp,
+            itemWidth = 84.dp
+        ),
+        BottomItem("login", R.drawable.user, "Perfil", iconSize = 40.dp),
+        BottomItem("home", R.drawable.figura, "Icono personalizado", iconSize = 40.dp)
+    )
     var selectedId by remember { mutableStateOf("home") }
     val carritoCount by carritoViewModel.carrito.collectAsState(initial = emptyList())
     val totalEnCarrito = carritoCount.sumOf { it.cantidad }

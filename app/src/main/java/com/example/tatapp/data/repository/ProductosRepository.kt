@@ -1,4 +1,4 @@
-package com.example.tatapp.data.repositorio
+package com.example.tatapp.data.repository
 
 import android.content.Context
 import com.example.tatapp.data.clases.ClaseProductos

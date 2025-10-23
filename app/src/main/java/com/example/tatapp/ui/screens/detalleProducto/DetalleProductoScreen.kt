@@ -52,7 +52,7 @@ fun DetalleProductoScreen(
                     IconButton(onClick = { navController.navigate("carrito") }) {
                         BadgedBox(
                             badge = {
-                                if (carritoViewModel.totalEnCarrito > 0) {
+                                if (carritoViewModel.totalEnCarrito.value > 0) {
                                     Badge (
                                         containerColor = Color.Red,
                                         contentColor = Color.White
