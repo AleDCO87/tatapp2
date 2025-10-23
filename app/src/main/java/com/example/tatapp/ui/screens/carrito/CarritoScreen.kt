@@ -3,6 +3,7 @@ package com.example.tatapp.ui.screens.carrito
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -51,6 +52,7 @@ fun CarritoScreen(navController: NavHostController, viewModel: CarritoViewModel)
             BottomItem("config", R.drawable.icon_tatapp, "Más", iconSize = 50.dp, tintIcon = false)
         )
     }
+    var selectedId by remember { mutableStateOf("carrito") }
 
     Scaffold(
         topBar = {
@@ -62,10 +64,10 @@ fun CarritoScreen(navController: NavHostController, viewModel: CarritoViewModel)
                     }
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface,            // Fondo
-                    titleContentColor = MaterialTheme.colorScheme.onSurface,       // Texto
-                    navigationIconContentColor = MaterialTheme.colorScheme.onSurface, // Iconos izq.
-                    actionIconContentColor = MaterialTheme.colorScheme.onSurface   // Iconos der.
+                    containerColor = MaterialTheme.colorScheme.background,            // Fondo
+                    titleContentColor = MaterialTheme.colorScheme.onBackground,       // Texto
+                    navigationIconContentColor = MaterialTheme.colorScheme.onBackground, // Iconos izq.
+                    actionIconContentColor = MaterialTheme.colorScheme.onBackground   // Iconos der.
                 )
             )
         },
@@ -87,6 +89,18 @@ fun CarritoScreen(navController: NavHostController, viewModel: CarritoViewModel)
                 contentColor = Color.White,
                 selectedLift = 58.dp,
                 selectedBubbleSize = 70.dp
+                carritoCount = carrito.size,
+                selectedId = selectedId,
+                onItemSelected = { id ->
+                    selectedId = id
+                    when (id) {
+                        "home" -> navController.navigate("homeProductosScreen")
+                        "detalle" -> navController.navigate("home")
+                        "carrito" -> navController.navigate("carrito")
+                        "perfil" -> navController.navigate("login")
+                        "logo" -> navController.navigate("home")
+                    }
+                }
             )
         }
     ) { innerPadding ->

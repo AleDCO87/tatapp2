@@ -32,6 +32,7 @@ fun HomeProductosScreen(
     carritoViewModel: CarritoViewModel
 ) {
     // --------- Tema claro/oscuro ----------
+
     val isDark by settingsVm.darkMode.collectAsState()
 
     // --------- Estado buscador ----------
@@ -50,6 +51,9 @@ fun HomeProductosScreen(
     val service = remember { retrofit.create(CatalogService::class.java) }
     val repo = remember { CatalogRepository(service) }
     val vm = remember { CatalogHomeViewModel(repo) }
+    var selectedId by remember { mutableStateOf("home") }
+    val carrito by carritoViewModel.carrito.collectAsState(initial = emptyList())
+    val totalEnCarrito = carrito.sumOf { it.cantidad }
 
     val prodsState by vm.products.collectAsState()
     val catsState by vm.categories.collectAsState()
@@ -101,6 +105,18 @@ fun HomeProductosScreen(
                 contentColor = Color.White,
                 selectedLift = 58.dp,
                 selectedBubbleSize = 70.dp
+                carritoCount = totalEnCarrito,
+                selectedId = selectedId,
+                onItemSelected = { tappedId ->
+                    selectedId = tappedId
+                    when (tappedId) {
+                        "home" -> navController.navigate("homeProductosScreen")
+                        "detalle" -> navController.navigate("home")
+                        "carrito" -> navController.navigate("carrito")
+                        "perfil" -> navController.navigate("login")
+                        "logo" -> navController.navigate("home")
+                    }
+                }
             )
         }
     ) { inner ->

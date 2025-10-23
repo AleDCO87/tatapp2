@@ -65,6 +65,10 @@ fun Home(
         BottomItem("login", R.drawable.user, "Perfil", iconSize = 40.dp),
         BottomItem("home", R.drawable.figura, "Icono personalizado", iconSize = 40.dp)
     )
+    var selectedId by remember { mutableStateOf("home") }
+    val carritoCount by carritoViewModel.carrito.collectAsState(initial = emptyList())
+    val totalEnCarrito = carritoCount.sumOf { it.cantidad }
+
 
     Scaffold(
         topBar = {
@@ -81,16 +85,16 @@ fun Home(
         },
         bottomBar = {
             BottomHomeBar(
-                items = bottomItems,
-                selectedId = selectedBottom,
-                onItemSelected = { item ->
-                    selectedBottom = item.id
-                    when (item.id) {
-                        "home"   -> navController.navigate("homeProductosScreen")
-                        "homeProductosScreen"   -> navController.navigate("homeProductosScreen")
-                        "carrito"   -> navController.navigate("carrito")
-                        "perfil"-> navController.navigate("perfil")
-                        "config"   -> navController.navigate("config")
+                carritoCount = totalEnCarrito,
+                selectedId = selectedId,
+                onItemSelected = { tappedId ->
+                    selectedId = tappedId
+                    when (tappedId) {
+                        "home" -> navController.navigate("homeProductosScreen")
+                        "detalle" -> navController.navigate("home")
+                        "carrito" -> navController.navigate("carrito")
+                        "perfil" -> navController.navigate("login")
+                        "logo" -> navController.navigate("home")
                     }
                 }
             )

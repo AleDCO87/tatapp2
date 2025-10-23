@@ -52,6 +52,8 @@ class MainActivity : ComponentActivity() {
         splash.setKeepOnScreenCondition { false }
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        FirebaseApp.initializeApp(this)
+        //enableEdgeToEdge()
 
         val db = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "app_db").build()
         val carritoFactory = CarritoViewModelFactory(db.carritoDao())
